@@ -1,4 +1,6 @@
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { CollectionScroller } from './components/CollectionScroller';
+import './components/CollectionScroller.css';
 import { useEffect, useState, useRef } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
@@ -353,24 +355,8 @@ return (
             </div>
           </section>
 
-          {/* Category Entry Section */}
-          <section className="py-[160px] bg-[#0a0a0a]">
-            <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex flex-col md:flex-row justify-between items-center space-y-16 md:space-y-0 text-xl md:text-2xl lg:text-3xl font-serif font-light tracking-[0.2em] text-[#EAE6E1]/80"
-              >
-                <button onClick={() => navTransition(() => navigate('/women'))} className="hover:text-[#EAE6E1] transition-colors duration-700 uppercase">WOMEN</button>
-                <button onClick={() => navTransition(() => navigate('/men'))} className="hover:text-[#EAE6E1] transition-colors duration-700 uppercase">MEN</button>
-                <button onClick={() => navTransition(() => navigate('/jewellery'))} className="hover:text-[#EAE6E1] transition-colors duration-700 uppercase">JEWELLERY</button>
-                <a href="#accessories" className="hover:text-[#EAE6E1] transition-colors duration-700">ACCESSORIES</a>
-                <a href="#footwear" className="hover:text-[#EAE6E1] transition-colors duration-700">FOOTWEAR</a>
-              </motion.div>
-            </div>
-          </section>
+          {/* Collection Scroller */}
+          <CollectionScroller />
         </>
       )}
 

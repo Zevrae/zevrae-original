@@ -1,0 +1,431 @@
+/* ═══════════════════════════════════════════════════════════
+   Collection Scroller — GSAP Horizontal Pinned
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Wrapper: provides scroll height for GSAP ─────────── */
+.cs-wrapper {
+  /* GSAP sets height dynamically via ScrollTrigger end */
+  position: relative;
+  background: #0a0a0a;
+}
+
+/* ── Sticky container: fills the viewport ─────────────── */
+.cs-sticky {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #0a0a0a;
+  position: relative;
+}
+
+/* ── Section header bar ───────────────────────────────── */
+.cs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 36px 60px 0;
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+}
+
+.cs-header__eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  color: rgba(197, 160, 89, 0.4);
+  text-transform: uppercase;
+}
+
+/* Dot nav row */
+.cs-header__dots {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.cs-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.cs-dot__bar {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: rgba(234, 230, 225, 0.15);
+  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.cs-dot--active .cs-dot__bar {
+  width: 48px;
+  background: rgba(197, 160, 89, 0.7);
+}
+
+.cs-dot__label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(234, 230, 225, 0.2);
+  transition: color 0.5s ease;
+}
+
+.cs-dot--active .cs-dot__label {
+  color: rgba(197, 160, 89, 0.7);
+}
+
+/* ── Track outer: fills remaining height ──────────────── */
+.cs-track-outer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Horizontal track ─────────────────────────────────── */
+.cs-track {
+  display: flex;
+  align-items: center;
+  /* Cards are centered with padding so first/last land center */
+  padding: 0 calc(50vw - 260px);
+  gap: 28px;
+  will-change: transform;
+}
+
+/* ── Individual card ──────────────────────────────────── */
+.cs-card {
+  flex: 0 0 auto;
+  width: 520px;
+  height: 580px;
+  border-radius: 2px;
+  background: var(--bg, #111);
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid rgba(234, 230, 225, 0.04);
+
+  /* Non-active state */
+  opacity: 0.3;
+  transform: scale(0.86);
+  filter: brightness(0.6);
+  transition:
+    opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+    filter 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Distance-based opacity cascade */
+.cs-card--dist-1 {
+  opacity: 0.2;
+  transform: scale(0.90);
+  filter: brightness(0.5);
+}
+.cs-card--dist-2 {
+  opacity: 0.12;
+  transform: scale(0.85);
+  filter: brightness(0.35);
+}
+.cs-card--dist-3 {
+  opacity: 0.06;
+  transform: scale(0.82);
+  filter: brightness(0.2);
+}
+
+/* Active state */
+.cs-card--active {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  filter: brightness(1) !important;
+  box-shadow:
+    0 0 0 1px rgba(197, 160, 89, 0.12),
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    0 0 120px rgba(197, 160, 89, 0.04);
+  z-index: 5;
+  cursor: default;
+}
+
+/* Number badge */
+.cs-card__number {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(197, 160, 89, 0.35);
+  z-index: 2;
+  transition: color 0.5s ease;
+}
+
+.cs-card--active .cs-card__number {
+  color: rgba(197, 160, 89, 0.6);
+}
+
+/* Image side */
+.cs-card__img-wrap {
+  width: 260px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  background: #0d0d0d;
+}
+
+.cs-card__img-wrap--contain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.cs-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  user-select: none;
+}
+
+.cs-card__img-wrap--contain .cs-card__img {
+  object-fit: contain;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.cs-card--active:hover .cs-card__img {
+  transform: scale(1.04);
+}
+
+/* Text side */
+.cs-card__body {
+  flex: 1;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.cs-card__label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(197, 160, 89, 0.4);
+  margin-bottom: 16px;
+  transition: color 0.5s ease;
+}
+
+.cs-card--active .cs-card__label {
+  color: rgba(197, 160, 89, 0.7);
+}
+
+.cs-card__heading {
+  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-size: 2.1rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(234, 230, 225, 0.9);
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+
+.cs-card__sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  line-height: 1.8;
+  color: rgba(234, 230, 225, 0.3);
+  margin-bottom: 32px;
+  max-width: 210px;
+  transition: color 0.5s ease;
+}
+
+.cs-card--active .cs-card__sub {
+  color: rgba(234, 230, 225, 0.45);
+}
+
+/* Meta row */
+.cs-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid rgba(234, 230, 225, 0.06);
+}
+
+.cs-card__count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(234, 230, 225, 0.2);
+  text-transform: uppercase;
+}
+
+.cs-card__cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(234, 230, 225, 0.25);
+  padding: 0;
+  transition: color 0.4s ease;
+  pointer-events: none;
+}
+
+.cs-card--active .cs-card__cta {
+  color: rgba(197, 160, 89, 0.6);
+  pointer-events: auto;
+}
+
+.cs-card--active .cs-card__cta:hover {
+  color: rgba(197, 160, 89, 1);
+}
+
+.cs-card--active .cs-card__cta:hover svg {
+  transform: translateX(5px);
+}
+
+.cs-card__cta svg {
+  transition: transform 0.35s ease;
+}
+
+/* ── Scroll hint at bottom ────────────────────────────── */
+.cs-scroll-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 0 28px;
+  flex-shrink: 0;
+}
+
+.cs-scroll-hint__line {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: rgba(234, 230, 225, 0.08);
+}
+
+.cs-scroll-hint__text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.5em;
+  color: rgba(234, 230, 225, 0.15);
+  text-transform: uppercase;
+}
+
+/* ── Progress bar along bottom ────────────────────────── */
+.cs-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(234, 230, 225, 0.04);
+}
+
+.cs-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.4), transparent);
+  transition: width 0.3s ease;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .cs-track {
+    padding: 0 calc(50vw - 200px);
+    gap: 20px;
+  }
+
+  .cs-card {
+    width: 420px;
+    height: 500px;
+  }
+
+  .cs-card__img-wrap {
+    width: 200px;
+  }
+
+  .cs-card__body {
+    padding: 32px 24px;
+  }
+
+  .cs-card__heading {
+    font-size: 1.75rem;
+  }
+
+  .cs-header {
+    padding: 28px 32px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .cs-track {
+    padding: 0 calc(50vw - 160px);
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .cs-card {
+    width: 320px;
+    height: 480px;
+    flex-direction: column;
+  }
+
+  .cs-card__img-wrap {
+    width: 100%;
+    height: 220px;
+  }
+
+  .cs-card__img {
+    height: 100%;
+  }
+
+  .cs-card__body {
+    padding: 24px 20px;
+  }
+
+  .cs-card__heading {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+
+  .cs-card__sub {
+    font-size: 10px;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .cs-header {
+    padding: 20px 20px 0;
+  }
+
+  .cs-header__dots {
+    gap: 16px;
+  }
+
+  .cs-dot__label {
+    display: none;
+  }
+}
