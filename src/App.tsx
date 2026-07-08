@@ -17,6 +17,7 @@ import { Preloader } from './features/preloader';
 import { usePreloader } from './features/PreloaderContext';
 import { PageTransitionLoader } from './features/PageTransitionLoader';
 import { usePageTransition } from './features/PageTransitionContext';
+import { CustomCursor } from './features/CustomCursor';
 
 function CampaignSection() {
   const editorialRef = useRef(null);
@@ -54,7 +55,7 @@ function CampaignSection() {
           transition={{ duration: 2, ease: [0.25, 0.1, 0.25, 1] }}
           className="order-1 md:order-2 relative"
         >
-          <div className="aspect-[4/5] overflow-hidden bg-[#111111]">
+          <div className="aspect-[4/5] overflow-hidden bg-[#111111]" data-cursor-image>
             <img 
               src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?q=80&w=1974&auto=format&fit=crop" 
               alt="Campaign" 
@@ -156,6 +157,8 @@ export default function App() {
 
 return (
   <div data-page-content className="min-h-screen bg-[#0a0a0a] text-[#EAE6E1] selection:bg-[#C5A059]/30 selection:text-[#EAE6E1] relative overflow-x-hidden font-sans">
+    {/* Premium custom cursor — hidden on touch devices */}
+    <CustomCursor />
     {/* Preloader Overlay — skip on admin */}
     {isLoading && !location.pathname.startsWith('/admin') && <Preloader />}
     {/* Page Transition Loader */}

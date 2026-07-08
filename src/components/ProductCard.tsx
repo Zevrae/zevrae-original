@@ -18,7 +18,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#111] mb-6">
+      <div className="relative aspect-[3/4] overflow-hidden bg-[#111] mb-6" data-cursor-image>
         <motion.img 
           initial={{ scale: 1 }}
           animate={{ scale: isHovered ? 1.05 : 1 }}

@@ -1101,7 +1101,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                   className="w-full md:w-[460px] max-w-[460px] group relative flex flex-col cursor-pointer"
                   onClick={() => navigate(item.path)}
                 >
-                  <div className="relative w-full aspect-[3/4] min-h-[540px] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]">
+                  <div className="relative w-full aspect-[3/4] min-h-[540px] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]" data-cursor-image>
                     
                     <img 
                       src={item.image} 
@@ -1173,7 +1173,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                     className="group relative flex flex-col cursor-pointer"
                     onClick={() => openProduct(item)}
                   >
-                    <div className="relative aspect-[3/4] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]">
+                    <div className="relative aspect-[3/4] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]" data-cursor-image>
                       
                       {item.frontImg ? (
                         <img 
@@ -1270,7 +1270,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                   className="w-full md:w-[460px] max-w-[460px] group relative flex flex-col cursor-pointer"
                   onClick={() => navigate(item.path)}
                 >
-                  <div className="relative w-full aspect-[3/4] min-h-[540px] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]">
+                  <div className="relative w-full aspect-[3/4] min-h-[540px] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]" data-cursor-image>
                     
                     <img 
                       src={item.image} 
@@ -1335,7 +1335,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                   onClick={() => navigate(item.path)}
                 >
                   {/* Antigravity & Glow Container */}
-                  <div className="relative aspect-[3/4] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]">
+                  <div className="relative aspect-[3/4] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]" data-cursor-image>
                     
                     {/* Image with Zoom */}
                     <img 
@@ -1403,7 +1403,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                   onClick={() => openProduct(item)}
                 >
                   {/* Antigravity & Glow Container */}
-                  <div className="relative aspect-[3/4] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]">
+                  <div className="relative aspect-[3/4] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]" data-cursor-image>
                     
                     {/* Image with Zoom */}
                     {item.frontImg ? (
