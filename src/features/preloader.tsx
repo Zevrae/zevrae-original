@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { usePreloader } from "./PreloaderContext";
 
@@ -11,17 +11,15 @@ import ed05 from "@/src/assets/ed-05.jpg";
 import ed06 from "@/src/assets/ed-06.jpg";
 
 /**
- * Zevrae — OUTFIT-style Preloader with smooth morph into hero.
+ * Zevrae — OUTFIT-style Preloader with slide-up reveal.
  *
  * Sequence:
- *  1. Dark background. Small editorial photos pile near center, each
- *     progressively fanning to the right.
+ *  1. Dark background. Small editorial photos pile near center.
  *  2. Large "ZEVRAE" text overlays with mix-blend-mode: difference.
  *     Letters slide in from top at random stagger.
  *  3. Counter 000 → 100.
  *  4. REVERSE — letters up, images out, counter fades.
- *  5. Background cross-fades from dark noir to the hero's light cream,
- *     then the preloader dissolves — the hero animates in beneath.
+ *  5. Entire preloader slides UP to reveal the hero beneath.
  */
 
 const useIsoLayoutEffect =
@@ -46,172 +44,169 @@ const LETTER_ORDER = [3, 0, 5, 1, 4, 2];
 export function Preloader() {
   const rootRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
-  const curtainRef = useRef<HTMLDivElement>(null);
   const { finish } = usePreloader();
   const finishedRef = useRef(false);
+  const [done, setDone] = useState(false);
 
   useIsoLayoutEffect(() => {
-    if (!rootRef.current) return;
+    const root = rootRef.current;
+    if (!root) return;
     document.body.setAttribute("data-loading", "true");
 
-    const ctx = gsap.context(() => {
-      const images = gsap.utils.toArray<HTMLElement>(".zv-plimg");
-      const letters = gsap.utils.toArray<HTMLElement>(".zv-brand-letter");
-      const counter = { value: 0 };
+    const images = root.querySelectorAll<HTMLElement>(".zv-plimg");
+    const letters = root.querySelectorAll<HTMLElement>(".zv-brand-letter");
+    const counter = { value: 0 };
 
-      // ── Pre-position images ──
-      images.forEach((el, i) => {
-        const rot = -8 + i * 7;
-        const dx = -12 + i * 5;
-        const dy = -6 + i * 3;
-        gsap.set(el, {
-          rotate: rot,
-          x: dx,
-          y: dy,
-          scale: 0.5,
-          opacity: 0,
-          transformOrigin: "50% 60%",
-        });
+    // ── Pre-position images ──
+    images.forEach((el, i) => {
+      const rot = -8 + i * 7;
+      const dx = -12 + i * 5;
+      const dy = -6 + i * 3;
+      gsap.set(el, {
+        rotate: rot,
+        x: dx,
+        y: dy,
+        scale: 0.5,
+        opacity: 0,
+        transformOrigin: "50% 60%",
       });
+    });
 
-      // ── Pre-position letters: below their mask (overflow:hidden parent) ──
-      letters.forEach((el) => {
-        gsap.set(el, { yPercent: 110 });
-      });
+    // ── Pre-position letters: below their mask (overflow:hidden parent) ──
+    letters.forEach((el) => {
+      gsap.set(el, { yPercent: 110 });
+    });
 
-      gsap.set(counterRef.current, { opacity: 0 });
+    gsap.set(counterRef.current, { opacity: 0 });
 
-      // ═══════════════════════════════
-      //  MAIN TIMELINE
-      // ═══════════════════════════════
-      const tl = gsap.timeline();
+    // ═══════════════════════════════
+    //  MAIN TIMELINE
+    // ═══════════════════════════════
+    const tl = gsap.timeline();
 
-      // Counter fade in
-      tl.to(counterRef.current, {
+    // Counter fade in
+    tl.to(counterRef.current, {
+      opacity: 1,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+
+    // Counter 0 → 100
+    tl.to(
+      counter,
+      {
+        value: 100,
+        duration: 2.2,
+        ease: "expo.inOut",
+        onUpdate: () => {
+          if (counterRef.current) {
+            counterRef.current.textContent = Math.floor(counter.value)
+              .toString()
+              .padStart(3, "0");
+          }
+        },
+      },
+      "<",
+    );
+
+    // Images stack in
+    tl.to(
+      images,
+      {
         opacity: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      });
+        scale: 1,
+        duration: 0.45,
+        ease: "back.out(1.2)",
+        stagger: { each: 0.18, from: "start" },
+      },
+      "<",
+    );
 
-      // Counter 0 → 100
+    // Brand letters slide up into view from below their mask
+    LETTER_ORDER.forEach((letterIdx, seqIdx) => {
       tl.to(
-        counter,
+        letters[letterIdx],
         {
-          value: 100,
-          duration: 2.2,
-          ease: "expo.inOut",
-          onUpdate: () => {
-            if (counterRef.current) {
-              counterRef.current.textContent = Math.floor(counter.value)
-                .toString()
-                .padStart(3, "0");
-            }
-          },
-        },
-        "<",
-      );
-
-      // Images stack in
-      tl.to(
-        images,
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.45,
-          ease: "back.out(1.2)",
-          stagger: { each: 0.18, from: "start" },
-        },
-        "<",
-      );
-
-      // Brand letters slide up into view from below their mask
-      LETTER_ORDER.forEach((letterIdx, seqIdx) => {
-        tl.to(
-          letters[letterIdx],
-          {
-            yPercent: 0,
-            duration: 0.4,
-            ease: "expo.out",
-          },
-          `${0.9 + seqIdx * 0.07}`,
-        );
-      });
-
-      // Hold
-      tl.to({}, { duration: 0.45 });
-
-      // ═══════════════════════════════
-      //  REVERSE + MORPH
-      // ═══════════════════════════════
-
-      // Letters slide up and out through the top of their mask
-      const reverseOrder = [...LETTER_ORDER].reverse();
-      reverseOrder.forEach((letterIdx, seqIdx) => {
-        tl.to(
-          letters[letterIdx],
-          {
-            yPercent: -110,
-            duration: 0.3,
-            ease: "expo.in",
-          },
-          seqIdx === 0 ? "rev" : `rev+=${seqIdx * 0.04}`,
-        );
-      });
-
-      // Images dismount
-      tl.to(
-        images,
-        {
-          opacity: 0,
-          scale: 0.35,
-          y: "+=40",
+          yPercent: 0,
           duration: 0.4,
-          ease: "power3.in",
-          stagger: { each: 0.04, from: "end" },
+          ease: "expo.out",
         },
-        "rev+=0.1",
+        `${0.9 + seqIdx * 0.07}`,
       );
+    });
 
-      // Counter out
-      tl.to(
-        counterRef.current,
-        { opacity: 0, duration: 0.3, ease: "power2.in" },
-        "-=0.25",
-      );
+    // Hold
+    tl.to({}, { duration: 0.45 });
 
-      // ── Smooth morph: dark → light background ──
+    // ═══════════════════════════════
+    //  REVERSE + MORPH
+    // ═══════════════════════════════
+
+    // Letters slide up and out through the top of their mask
+    const reverseOrder = [...LETTER_ORDER].reverse();
+    reverseOrder.forEach((letterIdx, seqIdx) => {
       tl.to(
-        curtainRef.current,
+        letters[letterIdx],
         {
-          backgroundColor: "#f2ede8",
-          duration: 0.7,
-          ease: "power2.inOut",
+          yPercent: -110,
+          duration: 0.3,
+          ease: "expo.in",
         },
-        "-=0.15",
+        seqIdx === 0 ? "rev" : `rev+=${seqIdx * 0.04}`,
       );
+    });
 
-      // ── Then fade the entire preloader out ──
-      tl.to(
-        curtainRef.current,
-        {
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          onComplete: () => {
-            if (finishedRef.current) return;
-            finishedRef.current = true;
-            document.body.setAttribute("data-loading", "false");
-            finish();
-          },
+    // Images dismount
+    tl.to(
+      images,
+      {
+        opacity: 0,
+        scale: 0.35,
+        y: "+=40",
+        duration: 0.4,
+        ease: "power3.in",
+        stagger: { each: 0.04, from: "end" },
+      },
+      "rev+=0.1",
+    );
+
+    // Counter out
+    tl.to(
+      counterRef.current,
+      { opacity: 0, duration: 0.3, ease: "power2.in" },
+      "-=0.25",
+    );
+
+    // ── Slide the ENTIRE preloader root UP to reveal the hero beneath ──
+    tl.to(
+      root,
+      {
+        yPercent: -100,
+        duration: 1.0,
+        ease: "power3.inOut",
+        onStart: () => {
+          // Dispatch event so hero can start animating while slide is in progress
+          window.dispatchEvent(new CustomEvent("preloader-sliding"));
         },
-      );
-    }, rootRef);
+        onComplete: () => {
+          // Only now signal context + unmount
+          if (finishedRef.current) return;
+          finishedRef.current = true;
+          document.body.setAttribute("data-loading", "false");
+          finish();
+          setDone(true);
+        },
+      },
+      "-=0.1",
+    );
 
     return () => {
-      ctx.revert();
+      tl.kill();
       document.body.setAttribute("data-loading", "false");
     };
   }, [finish]);
+
+  if (done) return null;
 
   return (
     <div
@@ -220,7 +215,6 @@ export function Preloader() {
       aria-hidden="true"
     >
       <div
-        ref={curtainRef}
         className="absolute inset-0"
         style={{ backgroundColor: "#0d0d0d" }}
       >

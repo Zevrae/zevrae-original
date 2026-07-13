@@ -137,6 +137,10 @@ export function PageTransitionLoader() {
             duration: 0.75,
             ease: "power2.inOut",
             force3D: true,
+            onStart: () => {
+              // Signal hero to animate in if navigating to home
+              window.dispatchEvent(new CustomEvent("hero-reveal"));
+            },
           },
           0.45,
         );

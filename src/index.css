@@ -49,3 +49,166 @@ body[data-loading="true"] {
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+/* ═══════════════════════════════════════════════
+   HERO SECTION — OUTFIT-style typography layout
+   ═══════════════════════════════════════════════ */
+
+.hero-typography-wrapper {
+  padding: 10vh 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-brand-text {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: clamp(5rem, 19vw, 22rem);
+  letter-spacing: -0.02em;
+  line-height: 0.85;
+  color: #C5A059;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.zv-hero-letter {
+  display: inline-block;
+}
+
+/* ® trademark symbol */
+.hero-trademark {
+  position: absolute;
+  right: 3vw;
+  bottom: calc(12vh + 2.2rem);
+  z-index: 5;
+}
+
+.hero-trademark span {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 3.5vw, 3.8rem);
+  color: #C5A059;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(1.6rem, 4vw, 4.4rem);
+  height: clamp(1.6rem, 4vw, 4.4rem);
+  border: 2px solid #C5A059;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+/* Gold horizontal divider */
+.hero-divider {
+  padding: 0 1.5rem;
+  position: relative;
+}
+
+.hero-divider-line {
+  height: 2px;
+  background: #C5A059;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* Info row below the divider */
+.hero-info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 2fr;
+  gap: 1rem;
+  padding: 1.6rem 1.5rem 6rem;
+  opacity: 0;
+  align-items: start;
+}
+
+.hero-info-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: rgba(234, 230, 225, 0.5);
+  font-weight: 500;
+}
+
+.hero-info-desc p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: rgba(234, 230, 225, 0.5);
+  line-height: 1.7;
+  max-width: 420px;
+  margin: 0;
+}
+
+.hero-info-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.hero-info-link-item {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(234, 230, 225, 0.5);
+}
+
+.hero-info-link-item button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.4s ease;
+}
+
+.hero-info-link-item button:hover {
+  color: #C5A059;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .hero-typography-wrapper {
+    padding: 12vh 0.5rem 0;
+  }
+
+  .hero-brand-text {
+    font-size: clamp(3.2rem, 17vw, 8rem);
+  }
+
+  .hero-trademark {
+    right: 2vw;
+    bottom: calc(12vh + 1.4rem);
+  }
+
+  .hero-trademark span {
+    font-size: 1rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-width: 1.5px;
+  }
+
+  .hero-info-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.6rem 1rem 4rem;
+  }
+
+  .hero-info-links {
+    align-items: flex-start;
+  }
+}

@@ -1,7 +1,8 @@
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { CollectionScroller } from './components/CollectionScroller';
 import './components/CollectionScroller.css';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useLayoutEffect, useState, useRef } from 'react';
+import gsap from 'gsap';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import LoginModal from './LoginModal';
@@ -78,7 +79,7 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { scrollY } = useScroll();
   const { setIsCartOpen, items } = useCart();
-  const { isLoading } = usePreloader();
+  const { isLoading, hasCompletedOnce } = usePreloader();
   const { trigger: navTransition } = usePageTransition();
   const location = useLocation();
   const navigate = useNavigate();
@@ -94,9 +95,9 @@ export default function App() {
     return () => { document.body.style.overflow = ''; };
   }, [isLoading, location.pathname]);
   
-  // Parallax effects
-  const heroY = useTransform(scrollY, [0, 1000], [0, 300]);
-  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  // Hero animation refs
+  const heroRef = useRef<HTMLDivElement>(null);
+  const heroAnimatedRef = useRef(false);
 
   useEffect(() => {
     const checkAdminStatus = async (u: any) => {
@@ -140,6 +141,86 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // ── Hero GSAP: hide letters immediately, animate when preloader reveals ──
+  const HERO_LETTERS = 'ZEVRAE'.split('');
+  const HERO_LETTER_ORDER = [3, 0, 5, 1, 4, 2];
+
+  const resetHero = () => {
+    if (!heroRef.current) return;
+    heroAnimatedRef.current = false;
+    const letters = heroRef.current.querySelectorAll<HTMLElement>('.zv-hero-letter');
+    const line = heroRef.current.querySelector<HTMLElement>('.hero-divider-line');
+    const infoRow = heroRef.current.querySelector<HTMLElement>('.hero-info-row');
+    letters.forEach((el) => gsap.set(el, { yPercent: 110 }));
+    if (line) gsap.set(line, { scaleX: 0, transformOrigin: 'left center' });
+    if (infoRow) gsap.set(infoRow, { opacity: 0, y: 20 });
+  };
+
+  const runHeroAnimation = () => {
+    if (heroAnimatedRef.current || !heroRef.current) return;
+    heroAnimatedRef.current = true;
+
+    const letters = heroRef.current.querySelectorAll<HTMLElement>('.zv-hero-letter');
+    const line = heroRef.current.querySelector<HTMLElement>('.hero-divider-line');
+    const infoRow = heroRef.current.querySelector<HTMLElement>('.hero-info-row');
+
+    if (!letters.length) return;
+
+    const tl = gsap.timeline();
+
+    // Letters slide up — power4.out gives a strong decel right before landing
+    // Last letter starts at 5*0.09=0.45s, finishes at 0.45+0.9 = 1.35s
+    HERO_LETTER_ORDER.forEach((letterIdx, seqIdx) => {
+      tl.to(
+        letters[letterIdx],
+        { yPercent: 0, duration: 0.9, ease: 'power4.out' },
+        `${seqIdx * 0.09}`,
+      );
+    });
+
+    // Line: starts at 0s, duration 1.25s → finishes at 1.25s (just before last letter at 1.35s)
+    if (line) {
+      tl.to(line, { scaleX: 1, duration: 1.25, ease: 'power2.inOut' }, 0);
+    }
+
+    // Info row fades up after letters land
+    if (infoRow) {
+      tl.to(infoRow, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 1.1);
+    }
+  };
+
+  // Reset + hide hero whenever location changes AWAY from home, so it's ready to animate on return
+  useEffect(() => {
+    if (isHome) {
+      // On home: hide immediately then run if already past preloader (HMR / direct nav)
+      resetHero();
+      if (hasCompletedOnce) {
+        setTimeout(runHeroAnimation, 50);
+      }
+    }
+  }, [location.pathname]);
+
+  // Preloader: fires at slide start → delay 500ms = 50% into the 1.0s slide
+  useEffect(() => {
+    const handle = () => {
+      if (!isHome) return;
+      setTimeout(runHeroAnimation, 500);
+    };
+    window.addEventListener('preloader-sliding', handle);
+    return () => window.removeEventListener('preloader-sliding', handle);
+  }, [isHome]);
+
+  // Page transition: fires when curtain lifts to reveal new page
+  useEffect(() => {
+    const handle = () => {
+      if (!isHome) return;
+      // Small delay to let the page content settle before animating
+      setTimeout(runHeroAnimation, 100);
+    };
+    window.addEventListener('hero-reveal', handle);
+    return () => window.removeEventListener('hero-reveal', handle);
+  }, [isHome]);
+
   // Luxury animation pacing
   const transition = { duration: 1.2, ease: [0.25, 0.1, 0.25, 1] };
   const staggerTransition = { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] };
@@ -159,27 +240,11 @@ return (
   <div data-page-content className="min-h-screen bg-[#0a0a0a] text-[#EAE6E1] selection:bg-[#C5A059]/30 selection:text-[#EAE6E1] relative overflow-x-hidden font-sans">
     {/* Premium custom cursor — hidden on touch devices */}
     <CustomCursor />
-    {/* Preloader Overlay — skip on admin */}
-    {isLoading && !location.pathname.startsWith('/admin') && <Preloader />}
+    {/* Preloader Overlay — self-manages slide-up exit, never re-renders after completion */}
+    {!hasCompletedOnce && !location.pathname.startsWith('/admin') && <Preloader />}
     {/* Page Transition Loader */}
     <PageTransitionLoader />
-    {isHome && (
-      <>
-        {/* HERO BACKGROUND VIDEO */}
-        <div className="relative w-full h-screen overflow-hidden">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            <source src="/packaging.mp4" type="video/mp4" />
-          </video>
-        </div>
-        <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
-      </>
-    )}
+
       {/* Global Film Grain */}
       <div 
         className="fixed inset-0 opacity-[0.015] pointer-events-none z-50 mix-blend-difference"
@@ -310,58 +375,60 @@ return (
         )}
       </AnimatePresence>
 
-      {/* Hero Section */}
+      {/* Hero Section — OUTFIT-style typography */}
       {isHome && (
         <>
-          <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
-            <div className="relative z-20 text-center px-4 w-full flex flex-col items-center mt-12">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
-                className="mb-12"
-              >
-                <p className="text-[10px] md:text-[11px] uppercase tracking-[0.5em] font-plex-mono text-[#EAE6E1]/60">
-                  AUTUMN / WINTER 2026
-                </p>
-              </motion.div>
+          <section ref={heroRef} className="relative bg-[#0a0a0a] overflow-hidden">
+            {/* Giant ZEVRAE text */}
+            <div className="hero-typography-wrapper">
+              <h1 className="hero-brand-text" aria-label="ZEVRAE">
+                {HERO_LETTERS.map((letter, i) => (
+                  <span key={`hero-${letter}-${i}`} className="inline-block overflow-hidden" style={{ lineHeight: 1 }}>
+                    <span
+                      className="zv-hero-letter inline-block"
+                      style={{ willChange: 'transform' }}
+                    >
+                      {letter}
+                    </span>
+                  </span>
+                ))}
+              </h1>
+            </div>
 
-              <motion.h1
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 2, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                className="font-archivo font-bold tracking-[0.1em] leading-none text-[#EAE6E1] relative z-10 py-4"
-                style={{ fontSize: 'clamp(3rem, 7vw, 7rem)', fontStretch: '125%' }}
-              >
-                ZEVRAE
-              </motion.h1>
-              
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 2, delay: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                className="mt-8"
-              >
-                <p className="text-[11px] md:text-[13px] font-sans italic text-[#EAE6E1]/50 tracking-[0.05em]">
-                  The Architecture of Elegance
-                </p>
-              </motion.div>
+            {/* Registered trademark symbol */}
+            <div className="hero-trademark">
+              <span>®</span>
+            </div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 2, delay: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
-                className="mt-20 flex space-x-16 text-[10px] uppercase tracking-[0.3em] font-plex-mono text-[#EAE6E1]/70"
-              >
-                <a href="#collection" className="hover:text-[#EAE6E1] transition-colors duration-500 relative group pb-1">
-                  View Collection
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C5A059]/30 transform origin-left scale-x-0 transition-transform duration-700 ease-out group-hover:scale-x-100" />
-                </a>
-                <a href="#lookbook" className="hover:text-[#EAE6E1] transition-colors duration-500 relative group pb-1">
-                  Lookbook
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C5A059]/30 transform origin-left scale-x-0 transition-transform duration-700 ease-out group-hover:scale-x-100" />
-                </a>
-              </motion.div>
+            {/* Gold horizontal divider — draws left to right */}
+            <div className="hero-divider">
+              <div className="hero-divider-line" />
+            </div>
+
+            {/* Info row below divider */}
+            <div className="hero-info-row">
+              <div className="hero-info-col hero-info-brand">
+                <span className="hero-info-label">ZEVRAE</span>
+              </div>
+              <div className="hero-info-col hero-info-why">
+                <span className="hero-info-label">WHY</span>
+              </div>
+              <div className="hero-info-col hero-info-desc">
+                <p>
+                  Created by the Zevrae team, this store and signature collection
+                  celebrates our collective creativity and passion for apparel. Carefully
+                  designed.
+                </p>
+              </div>
+              <div className="hero-info-col hero-info-links">
+                <span className="hero-info-link-item">
+                  <button onClick={() => navTransition(() => navigate('/men'))}>VISIT COLLECTION</button>
+                </span>
+                <span className="hero-info-link-item">© {new Date().getFullYear()}</span>
+                <span className="hero-info-link-item">
+                  <button onClick={() => navTransition(() => navigate('/jewellery'))}>SHIPPING & RETURNS</button>
+                </span>
+              </div>
             </div>
           </section>
 
