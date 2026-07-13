@@ -91,7 +91,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-          className="relative w-full h-[100dvh] md:h-auto max-w-5xl bg-[#0a0a0a] md:border border-[#C5A059]/10 rounded-none md:rounded-sm overflow-hidden flex flex-col md:flex-row max-h-[100dvh] md:max-h-[90vh]"
+          className="relative w-full h-[100dvh] md:h-auto max-w-5xl bg-[#12100C] md:border border-[#C5A059]/10 rounded-none md:rounded-sm overflow-hidden flex flex-col md:flex-row max-h-[100dvh] md:max-h-[90vh]"
         >
           <button 
             onClick={onClose}
@@ -117,7 +117,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             </div>
             
             {/* Thumbnails */}
-            <div className="flex p-4 gap-4 bg-[#0a0a0a] border-b md:border-t border-[#C5A059]/10 overflow-x-auto scrollbar-hide">
+            <div className="flex p-4 gap-4 bg-[#12100C] border-b md:border-t border-[#C5A059]/10 overflow-x-auto scrollbar-hide">
               <button 
                 onClick={() => setActiveImage('front')}
                 className={`relative w-20 min-w-[5rem] aspect-[3/4] shrink-0 rounded-sm overflow-hidden border-2 transition-colors ${activeImage === 'front' ? 'border-[#C5A059]' : 'border-transparent hover:border-[#EAE6E1]/30'}`}
@@ -237,7 +237,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 disabled={!selectedSize}
                 className={`w-full py-4 flex items-center justify-center space-x-3 uppercase tracking-[0.2em] font-bold text-[11px] transition-all duration-300 ${
                   selectedSize 
-                    ? 'bg-[#EAE6E1] text-[#0a0a0a] hover:bg-[#C5A059]' 
+                    ? 'bg-[#EAE6E1] text-[#12100C] hover:bg-[#C5A059]' 
                     : 'bg-[#EAE6E1]/10 text-[#EAE6E1]/30 cursor-not-allowed'
                 }`}
               >
@@ -249,7 +249,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 disabled={!selectedSize}
                 className={`w-full py-4 uppercase tracking-[0.2em] font-bold text-[11px] transition-all duration-300 border ${
                   selectedSize 
-                    ? 'border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#0a0a0a]' 
+                    ? 'border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#12100C]' 
                     : 'border-[#EAE6E1]/10 text-[#EAE6E1]/30 cursor-not-allowed'
                 }`}
               >
@@ -259,13 +259,13 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
           </div>
           
           {/* Actions Mobile Sticky */}
-          <div className="md:hidden absolute bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#C5A059]/20 p-4 flex gap-3 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.8)]">
+          <div className="md:hidden absolute bottom-0 left-0 right-0 bg-[#12100C] border-t border-[#C5A059]/20 p-4 flex gap-3 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.8)]">
             <button 
               onClick={handleAddToCart}
               disabled={!selectedSize}
               className={`flex-1 py-3 px-2 flex items-center justify-center space-x-2 uppercase tracking-[0.1em] sm:tracking-[0.2em] font-bold text-[10px] sm:text-[11px] transition-all duration-300 ${
                 selectedSize 
-                  ? 'bg-[#EAE6E1] text-[#0a0a0a] hover:bg-[#C5A059]' 
+                  ? 'bg-[#EAE6E1] text-[#12100C] hover:bg-[#C5A059]' 
                   : 'bg-[#EAE6E1]/10 text-[#EAE6E1]/30 cursor-not-allowed'
               }`}
             >

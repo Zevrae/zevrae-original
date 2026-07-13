@@ -6,7 +6,7 @@
 .cs-wrapper {
   /* GSAP sets height dynamically via ScrollTrigger end */
   position: relative;
-  background: #0a0a0a;
+  background: #12100C;
 }
 
 /* ── Sticky container: fills the viewport ─────────────── */
@@ -16,7 +16,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: #0a0a0a;
+  background: #12100C;
   position: relative;
 }
 

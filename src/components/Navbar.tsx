@@ -11,7 +11,7 @@ export const Navbar: React.FC = () => {
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isHome ? 'bg-transparent text-white' : 'bg-[#0a0a0a] text-white border-b border-white/10'}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isHome ? 'bg-transparent text-white' : 'bg-[#12100C] text-white border-b border-white/10'}`}>
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <button className="lg:hidden">

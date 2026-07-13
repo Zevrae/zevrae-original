@@ -441,187 +441,6 @@ const jewelleryProducts = [
     sizes: ["Universal"],
     frontImg: "https://i.ibb.co/pv2rXCBc/Star-Gold-Platted-Bracelte.png",
   },
-  {
-    id: 'k1',
-    name: "Bright Red Metallic Cherry Keychain",
-    price: 399,
-    originalPrice: 739,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/fdt5NJjf/Bright-Red-Metallic-Cherry-Keychain.png"
-  },
-  {
-    id: 'k2',
-    name: "Cartoon Honeycomb Bee Flower Alloy Keychain",
-    price: 399,
-    originalPrice: 739,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/j92T3rty/Cartoon-Bee-Flower-Alloy-Keychain-FRONT.png",
-    backImg: "https://i.ibb.co/B2KkYnTp/Cartoon-Bee-Flower-Alloy-Keychain-BACK.png",
-    topImg: "https://i.ibb.co/3YCMCyHz/Cartoon-Bee-Flower-Alloy-Keychain-TOP.png"
-  },
-  {
-    id: 'k3',
-    name: "Dagama Keychain",
-    price: 259,
-    originalPrice: 479,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/TqTFG273/Dagama-Keychain.png"
-  },
-  {
-    id: 'k4',
-    name: "Drill Alloy Sunflower Lightning Cross",
-    price: 399,
-    originalPrice: 799,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/J9yQpG7/Drill-Alloy-Sunflower-Lightning-Cross-FRONT.png",
-    backImg: "https://i.ibb.co/mVpsm12p/Drill-Alloy-Sunflower-Lightning-Cross-BACK.jpg"
-  },
-  {
-    id: 'k5',
-    name: "Flamenco Keychain",
-    price: 259,
-    originalPrice: 479,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/3yQzs211/Flamenco-Keychain.png"
-  },
-  {
-    id: 'k6',
-    name: "Gremio Keychain",
-    price: 259,
-    originalPrice: 479,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/B2rJ7P14/Gremio-Keychain.png"
-  },
-  {
-    id: 'k7',
-    name: "Intelligence National Team Keychain",
-    price: 259,
-    originalPrice: 479,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/gZtnPYRR/Intelligence-National-Team-Keychain.png"
-  },
-  {
-    id: 'k8',
-    name: "Pastoral Flower Alloy Keychain",
-    price: 399,
-    originalPrice: 739,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/rKnpDFX6/Pastoral-Flower-Alloy-Keychain-FRONT.png",
-    backImg: "https://i.ibb.co/BH94y86h/Pastoral-Flower-Alloy-Keychain-BACK.png"
-  },
-  {
-    id: 'k9',
-    name: "Rainbow Love Set Keychain",
-    price: 499,
-    originalPrice: 839,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/7txCwS26/Rainbow-Love-Set-Keychain.png"
-  },
-  {
-    id: 'k10',
-    name: "Rainbow Unicorn Set Keychain",
-    price: 499,
-    originalPrice: 839,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/vxXCHrJz/Rainbow-Unicorn-Set-Keychain.png"
-  },
-  {
-    id: 'k11',
-    name: "Red Cherry Keychain",
-    price: 499,
-    originalPrice: 839,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/hFWYWn0P/Red-Cherry-Keychain.png"
-  },
-  {
-    id: 'k12',
-    name: "Red Love Keychain",
-    price: 499,
-    originalPrice: 839,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/HLsFXm8q/Red-Love-Keychain.png"
-  },
-  {
-    id: 'k13',
-    name: "Silver Skeleton Hand Heart Keychain",
-    price: 499,
-    originalPrice: 839,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/FRsjTs2/Silver-Skeleton-Hand-Heart-Keychain.png"
-  },
-  {
-    id: 'k14',
-    name: "Silver Spider Web Keychain",
-    price: 699,
-    originalPrice: 1294,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/WpPrR18m/Silver-Spider-Web-Keychain.png"
-  },
-  {
-    id: 'k15',
-    name: "Starfish Keychain",
-    price: 499,
-    originalPrice: 839,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/Df7dkNxq/Starfish-Keychain.png"
-  },
-  {
-    id: 'k16',
-    name: "Vintage Medieval Anchor Keychain Accessory Streetwear",
-    price: 399,
-    originalPrice: 739,
-    discount: "46% OFF",
-    category: "keychain",
-    label: 'Jewellery Premium',
-    sizes: ["Universal"],
-    frontImg: "https://i.ibb.co/zVPbsrnJ/Vintage-Medieval-Anchor-Keychain-Accessory-Streetwear-FRONT.png",
-    backImg: "https://i.ibb.co/chytnnW0/Vintage-Medieval-Anchor-Keychain-Accessory-Streetwear-BACK.png"
-  },
   { 
     id: 't1', 
     name: 'Cute Sun Moon Plush Doll', 
@@ -856,7 +675,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.5 }}
           id="men" 
-          className="py-[120px] bg-[#0a0a0a] relative z-10"
+          className="py-[120px] bg-[#12100C] relative z-10"
         >
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-16">
             <motion.h2 
@@ -955,13 +774,13 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                       </div>
                       {item.discount && (
                         <div className="absolute top-4 right-4 bg-[#C5A059] px-2 py-1 rounded-sm shadow-lg z-10">
-                          <span className="text-[10px] uppercase font-bold tracking-wider text-[#0a0a0a]">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-[#12100C]">
                             {item.discount}
                           </span>
                         </div>
                       )}
                       <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                        <button className="w-full bg-[#EAE6E1] text-[#0a0a0a] py-3 flex items-center justify-center space-x-2 hover:bg-[#C5A059] transition-colors duration-300 rounded-sm">
+                        <button className="w-full bg-[#EAE6E1] text-[#12100C] py-3 flex items-center justify-center space-x-2 hover:bg-[#C5A059] transition-colors duration-300 rounded-sm">
                           <span className="text-[10px] uppercase tracking-[0.2em] font-bold">Quick View</span>
                         </button>
                       </div>
@@ -994,7 +813,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.5 }}
           id="gendered-category" 
-          className="py-[120px] bg-[#0a0a0a] relative z-10 border-t border-[#C5A059]/10"
+          className="py-[120px] bg-[#12100C] relative z-10 border-t border-[#C5A059]/10"
         >
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-16">
             <motion.h2 
@@ -1060,13 +879,13 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                       {/* Discount Badge */}
                       {('discount' in item && item.discount) && (
                         <div className="absolute top-4 right-4 bg-[#C5A059] px-2 py-1 rounded-sm shadow-lg z-10">
-                          <span className="text-[10px] uppercase font-bold tracking-wider text-[#0a0a0a]">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-[#12100C]">
                             {item.discount}
                           </span>
                         </div>
                       )}
                       <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                        <button className="w-full bg-[#EAE6E1] text-[#0a0a0a] py-3 flex items-center justify-center space-x-2 hover:bg-[#C5A059] transition-colors duration-300 rounded-sm">
+                        <button className="w-full bg-[#EAE6E1] text-[#12100C] py-3 flex items-center justify-center space-x-2 hover:bg-[#C5A059] transition-colors duration-300 rounded-sm">
                           <span className="text-[10px] uppercase tracking-[0.2em] font-bold">Quick View</span>
                         </button>
                       </div>
@@ -1099,7 +918,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.5 }}
           id="women" 
-          className="py-[120px] bg-[#0a0a0a] relative z-10 border-t border-[#C5A059]/10"
+          className="py-[120px] bg-[#12100C] relative z-10 border-t border-[#C5A059]/10"
         >
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-16">
             <motion.h2 
@@ -1163,7 +982,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.5 }}
           id="jewellery" 
-          className="py-[120px] bg-[#0a0a0a] relative z-10 border-t border-[#C5A059]/10"
+          className="py-[120px] bg-[#12100C] relative z-10 border-t border-[#C5A059]/10"
         >
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-16">
             <motion.h2 
@@ -1231,7 +1050,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.5 }}
           id="jewellery-category" 
-          className="py-[120px] bg-[#0a0a0a] relative z-10 border-t border-[#C5A059]/10"
+          className="py-[120px] bg-[#12100C] relative z-10 border-t border-[#C5A059]/10"
         >
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-16">
             <motion.h2 
@@ -1293,7 +1112,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                     {/* Discount Badge */}
                     {('discount' in item && item.discount) && (
                       <div className="absolute top-4 right-4 bg-[#C5A059] px-2 py-1 rounded-sm shadow-lg z-10">
-                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#0a0a0a]">
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#12100C]">
                           {item.discount}
                         </span>
                       </div>
@@ -1305,7 +1124,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
                           e.stopPropagation();
                           openProduct(item);
                         }}
-                        className="w-full bg-[#EAE6E1] text-[#0a0a0a] py-3 flex items-center justify-center space-x-2 hover:bg-[#C5A059] transition-colors duration-300 rounded-sm"
+                        className="w-full bg-[#EAE6E1] text-[#12100C] py-3 flex items-center justify-center space-x-2 hover:bg-[#C5A059] transition-colors duration-300 rounded-sm"
                       >
                         <span className="text-[10px] uppercase tracking-[0.2em] font-bold">Quick View</span>
                       </button>

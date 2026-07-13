@@ -194,7 +194,7 @@ export default function App() {
   const displayName = getDisplayName();
 
 return (
-  <div data-page-content className="min-h-screen bg-[#0a0a0a] text-[#EAE6E1] selection:bg-[#C5A059]/30 selection:text-[#EAE6E1] relative overflow-x-hidden font-sans">
+  <div data-page-content className="min-h-screen bg-[#12100C] text-[#EAE6E1] selection:bg-[#C5A059]/30 selection:text-[#EAE6E1] relative overflow-x-hidden font-sans">
     {/* Premium custom cursor — hidden on touch devices */}
     <CustomCursor />
     {/* Preloader Overlay — self-manages slide-up exit, never re-renders after completion */}
@@ -212,7 +212,7 @@ return (
       {!location.pathname.startsWith('/admin') && (
       <nav 
         className={`fixed top-0 w-full z-40 transition-all duration-1000 ${
-          isScrolled ? 'bg-[#0a0a0a]/95 backdrop-blur-md py-6 border-b border-[#C5A059]/10' : 'bg-transparent py-10'
+          isScrolled ? 'bg-[#12100C]/95 backdrop-blur-md py-6 border-b border-[#C5A059]/10' : 'bg-transparent py-10'
         }`}
       >
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex justify-between items-center">
@@ -288,7 +288,7 @@ return (
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-[#0a0a0a] z-50 flex flex-col items-center justify-center space-y-12"
+            className="fixed inset-0 bg-[#12100C] z-50 flex flex-col items-center justify-center space-y-12"
           >
             <button 
               onClick={() => setIsMenuOpen(false)}
@@ -337,7 +337,7 @@ return (
         <>
           <section
             ref={heroRef}
-            className="relative bg-[#0a0a0a] overflow-hidden min-h-screen flex flex-col items-center justify-center"
+            className="relative bg-[#12100C] overflow-hidden min-h-screen flex flex-col items-center justify-center"
           >
             {/* ── PHOTO PLACEHOLDER — replace src with <video> when ready ── */}
             <img
@@ -464,7 +464,7 @@ return (
 
 
       {/* Footer */}
-      <footer className="bg-[#0a0a0a] pt-[160px] pb-16 px-6 md:px-12 border-t border-[#C5A059]/10">
+      <footer className="bg-[#12100C] pt-[160px] pb-16 px-6 md:px-12 border-t border-[#C5A059]/10">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8 mb-32">
             <div className="col-span-1 md:col-span-4">

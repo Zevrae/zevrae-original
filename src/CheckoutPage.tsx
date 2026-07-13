@@ -245,14 +245,14 @@ export default function CheckoutPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="min-h-screen bg-[#12100C] flex items-center justify-center">
         <div className="text-[#C5A059] animate-pulse">Checking authentication...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#EAE6E1] font-sans selection:bg-[#C5A059]/30 pt-[100px] pb-24 relative z-10">
+    <div className="min-h-screen bg-[#12100C] text-[#EAE6E1] font-sans selection:bg-[#C5A059]/30 pt-[100px] pb-24 relative z-10">
       {/* Header */}
       <div className="max-w-[1200px] mx-auto px-6 mb-12 flex items-center justify-between">
         <button 
@@ -520,7 +520,7 @@ export default function CheckoutPage() {
                     disabled={!selectedMethod || isProcessing}
                     className={`w-full py-4 mt-4 flex justify-center items-center gap-2 rounded-sm group transition-all duration-300 ${
                       selectedMethod && !isProcessing
-                        ? 'bg-[#C5A059] hover:bg-[#b08d4b] text-[#0a0a0a] shadow-[0_4px_20px_-5px_rgba(197,160,89,0.4)]' 
+                        ? 'bg-[#C5A059] hover:bg-[#b08d4b] text-[#12100C] shadow-[0_4px_20px_-5px_rgba(197,160,89,0.4)]' 
                         : 'bg-[#111] text-[#EAE6E1]/30 cursor-not-allowed border border-[#EAE6E1]/10'
                     }`}
                   >
@@ -581,7 +581,7 @@ export default function CheckoutPage() {
               <div className="space-y-4 mb-8 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {items.map(item => (
                   <div key={`${item.id}-${item.size}`} className="flex gap-4 group">
-                    <div className="w-16 h-20 bg-[#0a0a0a] rounded-sm overflow-hidden border border-[#EAE6E1]/5 relative flex-shrink-0">
+                    <div className="w-16 h-20 bg-[#12100C] rounded-sm overflow-hidden border border-[#EAE6E1]/5 relative flex-shrink-0">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80" />
                       <div className="absolute top-0 right-0 bg-[#C5A059] text-black text-[9px] w-4 h-4 flex items-center justify-center font-bold">
                         {item.quantity}

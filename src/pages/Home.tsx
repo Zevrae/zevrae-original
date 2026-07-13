@@ -52,11 +52,11 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-[#0a0a0a] min-h-screen text-white">
+    <div className="bg-[#12100C] min-h-screen text-white">
       {/* Hero Section */}
       <section
         ref={heroRef}
-        className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-[#0a0a0a]"
+        className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-[#12100C]"
       >
         {/* Season label */}
         <p className="text-[10px] uppercase tracking-[0.4em] text-[#EAE6E1]/50 font-plex-mono mb-10">

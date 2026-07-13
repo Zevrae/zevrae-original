@@ -88,7 +88,7 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-[#EAE6E1] flex items-center justify-center px-6">
+      <div className="min-h-screen bg-[#12100C] text-[#EAE6E1] flex items-center justify-center px-6">
         <div className="max-w-lg text-center space-y-6">
           <p className="text-[10px] uppercase tracking-[0.4em] text-[#C5A059]">Product not found</p>
           <h1 className="text-3xl md:text-5xl font-serif tracking-[0.1em] uppercase">{params.id}</h1>
@@ -108,7 +108,7 @@ export default function ProductPage() {
   const sizes = product.sizes?.length ? product.sizes : DEFAULT_SIZES;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#EAE6E1] font-sans selection:bg-[#C5A059]/30 selection:text-[#EAE6E1]">
+    <div className="min-h-screen bg-[#12100C] text-[#EAE6E1] font-sans selection:bg-[#C5A059]/30 selection:text-[#EAE6E1]">
       <div
         className="fixed inset-0 opacity-[0.015] pointer-events-none z-0 mix-blend-difference"
         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}
@@ -244,7 +244,7 @@ export default function ProductPage() {
                     disabled={!selectedSize}
                     className={`w-full py-4 flex items-center justify-center gap-3 uppercase tracking-[0.2em] font-bold text-[11px] transition-colors ${
                       selectedSize
-                        ? 'bg-[#EAE6E1] text-[#0a0a0a] hover:bg-[#C5A059]'
+                        ? 'bg-[#EAE6E1] text-[#12100C] hover:bg-[#C5A059]'
                         : 'bg-[#EAE6E1]/10 text-[#EAE6E1]/30 cursor-not-allowed'
                     }`}
                   >
@@ -257,7 +257,7 @@ export default function ProductPage() {
                     disabled={!selectedSize}
                     className={`w-full py-4 uppercase tracking-[0.2em] font-bold text-[11px] transition-colors border ${
                       selectedSize
-                        ? 'border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#0a0a0a]'
+                        ? 'border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#12100C]'
                         : 'border-[#EAE6E1]/10 text-[#EAE6E1]/30 cursor-not-allowed'
                     }`}
                   >

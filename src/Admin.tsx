@@ -155,7 +155,7 @@ function FormField({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
-const inputCls = "w-full bg-[#0a0a0a] border border-[#EAE6E1]/10 rounded-sm px-3 py-2.5 text-[12px] text-[#EAE6E1] font-mono placeholder:text-[#EAE6E1]/20 focus:outline-none focus:border-[#C5A059]/40 transition-colors";
+const inputCls = "w-full bg-[#12100C] border border-[#EAE6E1]/10 rounded-sm px-3 py-2.5 text-[12px] text-[#EAE6E1] font-mono placeholder:text-[#EAE6E1]/20 focus:outline-none focus:border-[#C5A059]/40 transition-colors";
 const selectCls = `${inputCls} cursor-pointer`;
 
 // ─── Dashboard Section ────────────────────────────────────────────────────────
@@ -312,7 +312,7 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#C5A059] bg-[#0a0a0a]/50">
+              <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#C5A059] bg-[#12100C]/50">
                 <th className="p-4 font-normal">Order</th>
                 <th className="p-4 font-normal">Customer</th>
                 <th className="p-4 font-normal">Date</th>
@@ -338,7 +338,7 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
               ) : (
                 filtered.map(order => (
                   <React.Fragment key={order.order_id}>
-                    <tr className="border-b border-[#EAE6E1]/5 hover:bg-[#0a0a0a]/40 transition-colors">
+                    <tr className="border-b border-[#EAE6E1]/5 hover:bg-[#12100C]/40 transition-colors">
                       <td className="p-4 text-[11px] font-mono text-[#EAE6E1]">
                         #{order.order_id.split('_').pop() || order.order_id}
                       </td>
@@ -381,7 +381,7 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.15 }}
                         >
-                          <td colSpan={7} className="px-5 pb-5 bg-[#0a0a0a]/60 border-b border-[#EAE6E1]/10">
+                          <td colSpan={7} className="px-5 pb-5 bg-[#12100C]/60 border-b border-[#EAE6E1]/10">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                               <div>
                                 <p className="text-[10px] uppercase tracking-[0.2em] font-sans text-[#C5A059] mb-3">Customer Details</p>
@@ -397,7 +397,7 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                                     <button
                                       key={s}
                                       onClick={() => onUpdateStatus(order.id, s)}
-                                      className="px-3 py-1.5 text-[9px] uppercase tracking-[0.1em] font-sans bg-[#0a0a0a] border border-[#EAE6E1]/10 rounded-sm hover:border-[#C5A059]/40 hover:text-[#C5A059] transition-colors capitalize"
+                                      className="px-3 py-1.5 text-[9px] uppercase tracking-[0.1em] font-sans bg-[#12100C] border border-[#EAE6E1]/10 rounded-sm hover:border-[#C5A059]/40 hover:text-[#C5A059] transition-colors capitalize"
                                     >
                                       {s}
                                     </button>
@@ -414,7 +414,7 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                                       <div key={idx} className="flex justify-between items-center bg-[#111] p-3 border border-[#EAE6E1]/5 rounded-sm">
                                         <div className="flex items-center gap-3">
                                           {item.image && (
-                                            <div className="w-9 h-9 bg-[#0a0a0a] rounded-sm overflow-hidden flex-shrink-0 border border-[#EAE6E1]/10">
+                                            <div className="w-9 h-9 bg-[#12100C] rounded-sm overflow-hidden flex-shrink-0 border border-[#EAE6E1]/10">
                                               <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80" />
                                             </div>
                                           )}
@@ -662,7 +662,7 @@ function ProductsSection() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#C5A059] bg-[#0a0a0a]/50">
+                <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#C5A059] bg-[#12100C]/50">
                   <th className="p-4 font-normal">Product</th>
                   <th className="p-4 font-normal">Subcategory</th>
                   <th className="p-4 font-normal">Price</th>
@@ -687,10 +687,10 @@ function ProductsSection() {
                   </tr>
                 ) : (
                   filteredDb.map(p => (
-                    <tr key={p.id} className="border-b border-[#EAE6E1]/5 hover:bg-[#0a0a0a]/40 transition-colors">
+                    <tr key={p.id} className="border-b border-[#EAE6E1]/5 hover:bg-[#12100C]/40 transition-colors">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[#0a0a0a] rounded-sm overflow-hidden flex-shrink-0 border border-[#EAE6E1]/10">
+                          <div className="w-10 h-10 bg-[#12100C] rounded-sm overflow-hidden flex-shrink-0 border border-[#EAE6E1]/10">
                             {p.images?.[0] ? (
                               <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover opacity-80" />
                             ) : (
@@ -751,7 +751,7 @@ function ProductsSection() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#EAE6E1]/30 bg-[#0a0a0a]/50">
+                <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#EAE6E1]/30 bg-[#12100C]/50">
                   <th className="p-4 font-normal">Product</th>
                   <th className="p-4 font-normal">Category</th>
                   <th className="p-4 font-normal">Price</th>
@@ -764,7 +764,7 @@ function ProductsSection() {
                   <tr key={p.id} className="border-b border-[#EAE6E1]/5">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[#0a0a0a] rounded-sm overflow-hidden flex-shrink-0 border border-[#EAE6E1]/10">
+                        <div className="w-10 h-10 bg-[#12100C] rounded-sm overflow-hidden flex-shrink-0 border border-[#EAE6E1]/10">
                           <img src={p.image} alt={p.name} className="w-full h-full object-cover opacity-50" />
                         </div>
                         <span className="text-[11px] font-sans text-[#EAE6E1]/50 uppercase tracking-[0.05em]">{p.name}</span>
@@ -1043,7 +1043,7 @@ function CollectionsSection() {
                 <button
                   type="button"
                   onClick={() => setForm(f => ({ ...f, featured: !f.featured }))}
-                  className={`w-full py-2.5 px-3 border rounded-sm text-[11px] font-sans flex items-center gap-2 transition-colors ${form.featured ? 'border-[#C5A059]/40 text-[#C5A059] bg-[#C5A059]/5' : 'border-[#EAE6E1]/10 text-[#EAE6E1]/40 bg-[#0a0a0a]'}`}
+                  className={`w-full py-2.5 px-3 border rounded-sm text-[11px] font-sans flex items-center gap-2 transition-colors ${form.featured ? 'border-[#C5A059]/40 text-[#C5A059] bg-[#C5A059]/5' : 'border-[#EAE6E1]/10 text-[#EAE6E1]/40 bg-[#12100C]'}`}
                 >
                   <Star size={12} fill={form.featured ? 'currentColor' : 'none'} />
                   {form.featured ? 'Yes – Featured' : 'No – Not featured'}
@@ -1109,7 +1109,7 @@ function CategoriesSection() {
                 <p className="text-[10px] font-mono text-[#EAE6E1]/30 mb-3">/{cat.slug}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {cat.subcategories.map(sub => (
-                    <span key={sub} className="px-2 py-0.5 bg-[#0a0a0a] border border-[#EAE6E1]/10 text-[9px] font-sans text-[#EAE6E1]/50 rounded-sm uppercase tracking-wider">
+                    <span key={sub} className="px-2 py-0.5 bg-[#12100C] border border-[#EAE6E1]/10 text-[9px] font-sans text-[#EAE6E1]/50 rounded-sm uppercase tracking-wider">
                       {sub}
                     </span>
                   ))}
@@ -1199,7 +1199,7 @@ function DiscountsSection() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#C5A059] bg-[#0a0a0a]/50">
+              <tr className="border-b border-[#EAE6E1]/10 text-[9px] uppercase tracking-[0.2em] font-sans text-[#C5A059] bg-[#12100C]/50">
                 <th className="p-4 font-normal">Code</th>
                 <th className="p-4 font-normal">Type</th>
                 <th className="p-4 font-normal">Value</th>
@@ -1211,7 +1211,7 @@ function DiscountsSection() {
             </thead>
             <tbody>
               {discounts.map(d => (
-                <tr key={d.id} className="border-b border-[#EAE6E1]/5 hover:bg-[#0a0a0a]/40 transition-colors">
+                <tr key={d.id} className="border-b border-[#EAE6E1]/5 hover:bg-[#12100C]/40 transition-colors">
                   <td className="p-4">
                     <span className="text-[12px] font-mono text-[#C5A059] bg-[#C5A059]/10 px-2 py-1 rounded-sm">{d.code}</span>
                   </td>
@@ -1221,7 +1221,7 @@ function DiscountsSection() {
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 max-w-[80px] bg-[#0a0a0a] rounded-full h-1.5">
+                      <div className="flex-1 max-w-[80px] bg-[#12100C] rounded-full h-1.5">
                         <div
                           className="bg-[#C5A059] h-full rounded-full transition-all"
                           style={{ width: `${Math.min(100, (d.uses / d.limit) * 100)}%` }}
@@ -1427,7 +1427,7 @@ export default function Admin() {
 
   if (isAdmin === null) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-[#C5A059] flex items-center justify-center">
+      <div className="min-h-screen bg-[#12100C] text-[#C5A059] flex items-center justify-center">
         <div className="flex items-center gap-3">
           <RefreshCw size={16} className="animate-spin" />
           <span className="text-[11px] uppercase tracking-[0.2em] font-sans">Verifying access...</span>
@@ -1437,7 +1437,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#EAE6E1] font-sans">
+    <div className="min-h-screen bg-[#12100C] text-[#EAE6E1] font-sans">
       <Sidebar
         active={activeSection}
         setActive={setActiveSection}
@@ -1448,7 +1448,7 @@ export default function Admin() {
       {/* Main content */}
       <div className="md:ml-56 min-h-screen flex flex-col">
         {/* Top Bar */}
-        <header className="sticky top-0 z-20 bg-[#0a0a0a]/95 backdrop-blur-sm border-b border-[#EAE6E1]/8 px-6 py-4 flex items-center justify-between">
+        <header className="sticky top-0 z-20 bg-[#12100C]/95 backdrop-blur-sm border-b border-[#EAE6E1]/8 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             {/* Mobile menu toggle */}
             <button
