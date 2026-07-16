@@ -49,13 +49,6 @@ const jewelleryCategories = [
     path: '/jewellery/pendants'
   },
   {
-    id: 'keychain',
-    name: 'KEYCHAIN',
-    image: 'https://i.ibb.co/fdt5NJjf/Bright-Red-Metallic-Cherry-Keychain.png',
-    fit: 'contain',
-    path: '/jewellery/keychain'
-  },
-  {
     id: 'bracelet',
     name: 'BRACELET',
     image: 'https://i.ibb.co/4ZR90MKP/Gold-Year-of-Snake-Bracelet.png',
@@ -63,18 +56,28 @@ const jewelleryCategories = [
     path: '/jewellery/bracelet'
   },
   {
-    id: 'toys',
-    name: 'TOYS',
-    image: 'https://i.ibb.co/SDxn1n3c/Cute-Sun-Moon-Plush-Doll.png',
-    fit: 'contain',
-    path: '/jewellery/toys'
-  },
-  {
     id: 'earrings',
     name: 'EARRINGS',
     image: 'https://i.ibb.co/y72Tgjg/Earing-set.png',
     fit: 'contain',
     path: '/jewellery/earrings'
+  }
+];
+
+const accessoriesCategories = [
+  {
+    id: 'keychain',
+    name: 'KEYCHAIN',
+    image: 'https://i.ibb.co/fdt5NJjf/Bright-Red-Metallic-Cherry-Keychain.png',
+    fit: 'contain',
+    path: '/accessories/keychain'
+  },
+  {
+    id: 'toys',
+    name: 'TOYS',
+    image: 'https://i.ibb.co/SDxn1n3c/Cute-Sun-Moon-Plush-Doll.png',
+    fit: 'contain',
+    path: '/accessories/toys'
   }
 ];
 const jewelleryProducts = [
@@ -616,7 +619,7 @@ const jewelleryProducts = [
   },
 
 ];
-export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter?: 'all' | 'men' | 'women' | 'jewellery' | 'rings' | 'pendants' | 'keychain' | 'bracelet' | 'toys' | 'earrings' | 'men-tshirts' | 'men-lowers' | 'women-tshirts' | 'women-lowers' }) {
+export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter?: 'all' | 'men' | 'women' | 'jewellery' | 'accessories' | 'rings' | 'pendants' | 'keychain' | 'bracelet' | 'toys' | 'earrings' | 'men-tshirts' | 'men-lowers' | 'women-tshirts' | 'women-lowers' }) {
   const navigate = useNavigate();
 
   const [dbProducts, setDbProducts] = useState<any[]>([]);
@@ -862,6 +865,70 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
           </div>
         </motion.section>
       )}
+      {categoryFilter === 'accessories' && (
+        <motion.section 
+          key="accessories"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.5 }}
+          id="accessories" 
+          className="py-[120px] bg-[#12100C] relative z-10 border-t border-[#C5A059]/10"
+        >
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-16">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
+              className="text-[12px] uppercase tracking-[0.4em] font-serif text-[#C5A059] mb-4 text-center md:text-left"
+            >
+              NEW ARRIVALS
+            </motion.h2>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.5, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+              className="text-3xl md:text-5xl font-serif font-light tracking-[0.1em] text-[#EAE6E1] text-center md:text-left uppercase"
+            >
+              ACCESSORIES COLLECTION
+            </motion.h3>
+          </div>
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-4 lg:gap-x-8 gap-y-16">
+              {accessoriesCategories.map((item, i) => (
+                <motion.div 
+                  key={item.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.8, delay: (i % 6) * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+                  className="group relative flex flex-col cursor-pointer"
+                  onClick={() => navigate(item.path)}
+                >
+                  <div className="relative aspect-[3/4] mb-6 bg-[#111111] rounded-sm overflow-hidden transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-[0_10px_40px_-10px_rgba(197,160,89,0.25)]" data-cursor-image>
+                    
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      className={`absolute inset-0 w-full h-full ${'fit' in item && item.fit === 'contain' ? 'object-contain' : 'object-cover'} transition-transform duration-700 ease-out group-hover:scale-110 opacity-90 group-hover:opacity-100`}
+                      referrerPolicy="no-referrer"
+                    />
+                    
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <h3 className="text-3xl font-serif font-light tracking-[0.2em] text-[#EAE6E1] uppercase">
+                        {item.name}
+                      </h3>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+      )}
       {categoryFilter === 'jewellery' && (
         <motion.section 
           key="jewellery"
@@ -930,7 +997,7 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
           </div>
         </motion.section>
       )}
-      {['rings', 'pendants', 'keychain', 'bracelet', 'toys', 'earrings'].includes(categoryFilter) && (
+      {['rings', 'pendants', 'bracelet', 'earrings'].includes(categoryFilter) && (
         <motion.section 
           key="jewellery-category"
           initial={{ opacity: 0, height: 0 }}
@@ -949,6 +1016,45 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
               className="text-[12px] uppercase tracking-[0.4em] font-serif text-[#C5A059] mb-4 text-center md:text-left"
             >
               JEWELLERY
+            </motion.h2>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.5, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+              className="text-3xl md:text-5xl font-serif font-light tracking-[0.1em] text-[#EAE6E1] text-center md:text-left uppercase"
+            >
+              {categoryFilter}
+            </motion.h3>
+          </div>
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+              {allJewelleryProducts.filter(p => p.category === categoryFilter).map((item, i) => (
+                <ProductCardSober key={item.id} product={item} index={i} onClick={() => openProduct(item)} />
+              ))}
+            </div>
+          </div>
+        </motion.section>
+      )}
+      {['keychain', 'toys'].includes(categoryFilter) && (
+        <motion.section 
+          key="accessories-category"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.5 }}
+          id="accessories-category" 
+          className="py-[120px] bg-[#12100C] relative z-10 border-t border-[#C5A059]/10"
+        >
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 mb-16">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
+              className="text-[12px] uppercase tracking-[0.4em] font-serif text-[#C5A059] mb-4 text-center md:text-left"
+            >
+              ACCESSORIES
             </motion.h2>
             <motion.h3
               initial={{ opacity: 0, y: 20 }}

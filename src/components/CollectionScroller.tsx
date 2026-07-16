@@ -60,8 +60,8 @@ const collections: Collection[] = [
     label: 'ACCESSORIES',
     heading: 'Accessories',
     sub: 'Each piece is crafted to be a statement of identity. Details that define the silhouette.',
-    menRoute: '/',
-    womenRoute: '/',
+    menRoute: '/accessories',
+    womenRoute: '/accessories',
     bgColor: '#0a0a0d',
     image: 'https://i.ibb.co/PzPQ3vgB/Gold-Sunflower-Pendant.png',
     menImage: 'https://i.ibb.co/k6VLyf0x/CARNAGE-FRONT.png',
@@ -122,28 +122,42 @@ function CollectionCard({ col, isActive, dist, onClickInactive }: CardProps) {
         <h2 className="cs-card__heading">{col.heading}</h2>
         <p className="cs-card__sub">{col.sub}</p>
         <div className="cs-card__actions">
-          <button
-            className="cs-card__cta cs-card__cta--men"
-            onMouseEnter={() => setHovered('men')}
-            onMouseLeave={() => setHovered(null)}
-            onClick={(e) => { e.stopPropagation(); navTransition(() => navigate(col.menRoute)); }}
-          >
-            <span>Men</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-          <button
-            className="cs-card__cta cs-card__cta--women"
-            onMouseEnter={() => setHovered('women')}
-            onMouseLeave={() => setHovered(null)}
-            onClick={(e) => { e.stopPropagation(); navTransition(() => navigate(col.womenRoute)); }}
-          >
-            <span>Women</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
+          {col.id !== 'accessories' ? (
+            <>
+              <button
+                className="cs-card__cta cs-card__cta--men"
+                onMouseEnter={() => setHovered('men')}
+                onMouseLeave={() => setHovered(null)}
+                onClick={(e) => { e.stopPropagation(); navTransition(() => navigate(col.menRoute)); }}
+              >
+                <span>Men</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+              <button
+                className="cs-card__cta cs-card__cta--women"
+                onMouseEnter={() => setHovered('women')}
+                onMouseLeave={() => setHovered(null)}
+                onClick={(e) => { e.stopPropagation(); navTransition(() => navigate(col.womenRoute)); }}
+              >
+                <span>Women</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </>
+          ) : (
+            <button
+              className="cs-card__cta"
+              onClick={(e) => { e.stopPropagation(); navTransition(() => navigate('/accessories')); }}
+            >
+              <span>Explore</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
     </div>

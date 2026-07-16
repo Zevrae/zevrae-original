@@ -231,7 +231,7 @@ return (
               JEWELLERY
               <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C5A059]/40 transform origin-left scale-x-0 transition-transform duration-700 ease-out group-hover:scale-x-100" />
             </button>
-            <button onClick={() => navTransition(() => navigate('/jewellery'))} className="group relative overflow-hidden pb-1 hover:text-[#EAE6E1] transition-colors duration-700">
+            <button onClick={() => navTransition(() => navigate('/accessories'))} className="group relative overflow-hidden pb-1 hover:text-[#EAE6E1] transition-colors duration-700">
               ACCESSORIES
               <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C5A059]/40 transform origin-left scale-x-0 transition-transform duration-700 ease-out group-hover:scale-x-100" />
             </button>
@@ -449,10 +449,11 @@ return (
         <Route path="/jewellery" element={<ProductGrid categoryFilter="jewellery" />} />
         <Route path="/jewellery/rings" element={<ProductGrid categoryFilter="rings" />} />
         <Route path="/jewellery/pendants" element={<ProductGrid categoryFilter="pendants" />} />
-        <Route path="/jewellery/keychain" element={<ProductGrid categoryFilter="keychain" />} />
         <Route path="/jewellery/bracelet" element={<ProductGrid categoryFilter="bracelet" />} />
-        <Route path="/jewellery/toys" element={<ProductGrid categoryFilter="toys" />} />
         <Route path="/jewellery/earrings" element={<ProductGrid categoryFilter="earrings" />} />
+        <Route path="/accessories" element={<ProductGrid categoryFilter="accessories" />} />
+        <Route path="/accessories/keychain" element={<ProductGrid categoryFilter="keychain" />} />
+        <Route path="/accessories/toys" element={<ProductGrid categoryFilter="toys" />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/admin" element={<Admin />} />
