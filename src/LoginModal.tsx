@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Mail, Lock, User, Phone } from 'lucide-react';
 import { supabase } from './supabaseClient';
+import { useAuth } from './hooks/UseAuth';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -9,12 +10,12 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const { login, register } = useAuth();
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
-    emailOrUsername: '',
     email: '',
     password: ''
   });
@@ -56,8 +57,25 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Normal login/signup logic will go here once backend is ready
-    console.log('Form submitted:', formData);
+    try {
+      if (mode === 'signIn') {
+        await login({
+          email: formData.email,
+          password: formData.password
+        });
+      } else {
+        await register({
+          name: formData.name,
+          mobile: formData.mobile,
+          email: formData.email,
+          password: formData.password
+        });
+      }
+      onClose(); // Close modal on success
+    } catch (error) {
+      console.error('Authentication error:', error);
+      // In a real app, you might want to show a toast or error message state here
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,12 +193,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     transition={{ duration: 0.2 }}
                   >
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A059]/50" size={18} />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A059]/50" size={18} />
                       <input
-                        type="text"
-                        name="emailOrUsername"
-                        placeholder="Email or Username"
-                        value={formData.emailOrUsername}
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        value={formData.email}
                         onChange={handleInputChange}
                         required
                         className="w-full bg-[#1A1814] border border-[#C5A059]/20 rounded-sm py-3 px-12 text-[#EAE6E1] text-[13px] font-plex-mono focus:outline-none focus:border-[#C5A059]/60 transition-colors placeholder:text-[#EAE6E1]/30"
