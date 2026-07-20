@@ -39,9 +39,9 @@ export default function CartDrawer() {
             className="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-[#050505] border-l border-white/10 z-[70] flex flex-col text-white"
           >
             <div className="p-6 border-b border-white/10 flex justify-between items-center">
-              <h2 className="text-sm font-plex-mono tracking-[0.2em] uppercase flex items-center gap-3">
-                <ShoppingBag size={16} />
-                Cart ({items.length})
+              <h2 className="text-lg font-archivo font-bold tracking-[0.1em] uppercase flex items-center gap-3 text-[#EAE6E1]" style={{ fontStretch: '125%' }}>
+                <ShoppingBag size={18} />
+                BAG ({items.length})
               </h2>
               <button
                 onClick={() => setIsCartOpen(false)}

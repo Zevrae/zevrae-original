@@ -6,10 +6,11 @@ import { useAuthModal } from './AuthModalContext';
 import { supabase } from './supabaseClient';
 import './BagPage.css';
 
-// "YOUR BAG" split into individual characters; space kept as a real char
+// "YOUR BAG" — only the 7 letter chars (space rendered separately)
 const BAG_CHARS = 'YOUR BAG'.split('');
-// Sequential left-to-right stagger order
-const BAG_CHAR_ORDER = BAG_CHARS.map((_, i) => i);
+// Hero-style scrambled stagger order for the 7 letters: Y=0,O=1,U=2,R=3,B=4,A=5,G=6
+// Scrambled like ZEVRAE hero [3,0,5,1,4,2] — pick non-sequential visual order: R,Y,G,O,B,U,A
+const BAG_CHAR_ORDER = [3, 0, 6, 1, 4, 2, 5]; // R,Y,G,O,B,U,A
 
 export default function BagPage() {
   const { items, removeFromCart, updateQuantity, cartTotal } = useCart();
@@ -19,25 +20,33 @@ export default function BagPage() {
   const dividerRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Page fade-up entrance
+  // Page fade-up entrance — short delay so React has painted the frame
   useEffect(() => {
-    const timer = setTimeout(() => setMounted(true), 20);
+    const timer = setTimeout(() => setMounted(true), 80);
     return () => clearTimeout(timer);
   }, []);
 
-  // GSAP letter animation — mirrors the ZEVRAE hero exactly
+  // GSAP letter animation — only starts AFTER page fade-in has begun
   useEffect(() => {
+    if (!mounted) return;  // Wait for page to become visible first
     if (!headerRef.current) return;
 
     const letters = headerRef.current.querySelectorAll<HTMLElement>('.bag-heading-letter');
     if (!letters.length) return;
 
-    // Start all letters hidden below their clip
+    // Divider starts invisible — draws left→right simultaneously like hero gold line
+    if (dividerRef.current) {
+      gsap.set(dividerRef.current, { scaleX: 0, transformOrigin: 'left center' });
+    }
+
+    // GSAP takes ownership of the transform — syncs to yPercent:110 (same as CSS default)
+    // then animates to 0 so letters slide into view
     gsap.set(letters, { yPercent: 110 });
 
-    const tl = gsap.timeline();
+    // Small delay after page fade begins, then scrambled stagger (like hero's delay: 0.2)
+    const tl = gsap.timeline({ delay: 0.15 });
 
-    // Slide each letter up with power4.out — 0.09s stagger between starts
+    // Slide each letter up — power4.out, 0.09s stagger, exactly matching hero
     BAG_CHAR_ORDER.forEach((charIdx, seqIdx) => {
       tl.to(
         letters[charIdx],
@@ -46,9 +55,8 @@ export default function BagPage() {
       );
     });
 
-    // Divider expands left→right simultaneously with the letters
+    // Gold divider draws left→right simultaneously with letters (like hero gold line)
     if (dividerRef.current) {
-      gsap.set(dividerRef.current, { scaleX: 0, transformOrigin: 'left center' });
       tl.to(
         dividerRef.current,
         { scaleX: 1, duration: 1.25, ease: 'power2.inOut' },
@@ -57,7 +65,7 @@ export default function BagPage() {
     }
 
     return () => { tl.kill(); };
-  }, []);
+  }, [mounted]);
 
   const handleCheckout = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -83,24 +91,22 @@ export default function BagPage() {
       style={{
         opacity: mounted ? 1 : 0,
         transform: mounted ? 'translateY(0)' : 'translateY(28px)',
-        transition: 'opacity 0.85s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.85s cubic-bezier(0.25, 0.1, 0.25, 1)',
+        transition: 'opacity 0.3s ease, transform 0.3s ease',
       }}
     >
       {/* ── Hero Heading ── */}
       <header className="bag-header" ref={headerRef}>
         <h1 className="bag-heading" aria-label="YOUR BAG">
-          {BAG_CHARS.map((char, i) => (
-            <span
-              key={i}
-              className="bag-heading-clip"
-              aria-hidden="true"
-            >
-              {/* The space needs to remain visible as a gap — render as non-breaking space */}
-              <span className="bag-heading-letter">
-                {char === ' ' ? '\u00A0' : char}
+          {BAG_CHARS.map((char, i) =>
+            char === ' ' ? (
+              // Real word gap — not animated, just provides the space between YOUR and BAG
+              <span key={i} className="bag-heading-space" aria-hidden="true" />
+            ) : (
+              <span key={i} className="bag-heading-clip" aria-hidden="true">
+                <span className="bag-heading-letter">{char}</span>
               </span>
-            </span>
-          ))}
+            )
+          )}
         </h1>
         <div className="bag-heading-divider" ref={dividerRef} />
       </header>

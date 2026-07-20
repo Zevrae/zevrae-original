@@ -12,35 +12,48 @@
   padding-top: clamp(7rem, 12vh, 10rem);
   padding-bottom: clamp(4rem, 10vh, 8rem);
   will-change: opacity, transform;
+  box-sizing: border-box;
 }
 
 /* ── Hero heading ── */
 .bag-header {
   margin-bottom: 0;
+  /* Break out of page's side padding so heading can center across full viewport */
+  margin-left: calc(-1 * clamp(1.5rem, 5vw, 5rem));
+  margin-right: calc(-1 * clamp(1.5rem, 5vw, 5rem));
+  padding-left: clamp(1.5rem, 5vw, 5rem);
+  padding-right: clamp(1.5rem, 5vw, 5rem);
+  overflow: hidden;
 }
 
 .bag-heading {
-  font-family: 'Neue Haas Grotesk Text Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  font-size: clamp(3.5rem, 11.5vw, 14rem);
-  line-height: 1;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: clamp(4rem, 12.5vw, 16rem);
+  line-height: 0.85;
   letter-spacing: -0.02em;
   color: #F2ECE6;
   text-transform: uppercase;
+  text-align: center;
   margin: 0 0 clamp(1rem, 2vw, 1.8rem) 0;
-  padding: 0;
-  display: flex;
+  padding: 0.4em 0;
   white-space: nowrap;
-  overflow: hidden;
+}
+
+/* The space between YOUR and BAG — a fixed-width gap */
+.bag-heading-space {
+  display: inline-block;
+  width: 0.25em;
 }
 
 /* Outer clip — overflow:hidden hides letter until GSAP slides it up */
 .bag-heading-clip {
   display: inline-block;
   overflow: hidden;
-  /* Extra bottom padding so descenders / caps don't get shaved */
-  padding-bottom: 0.12em;
   line-height: 1;
+  /* Generous vertical padding so tall Archivo caps don't get shaved */
+  padding-bottom: 0.18em;
   vertical-align: top;
 }
 
