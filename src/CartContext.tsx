@@ -44,7 +44,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       return [...currentItems, newItem];
     });
-    setIsCartOpen(true);
+    // setIsCartOpen(true); // User requested not to automatically open cart
   };
 
   const removeFromCart = (id: string, size: string) => {
