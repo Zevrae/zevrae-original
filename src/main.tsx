@@ -14,13 +14,13 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <PreloaderProvider>
         <PageTransitionProvider>
-          <CartProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <CartProvider>
               <AuthModalProvider>
                 <App />
               </AuthModalProvider>
-            </AuthProvider>
-          </CartProvider>
+            </CartProvider>
+          </AuthProvider>
         </PageTransitionProvider>
       </PreloaderProvider>
     </BrowserRouter>

@@ -15,7 +15,7 @@ import ProductPage from './ProductPage';
 import ShinyText from './components';
 import { useCart } from './CartContext';
 import { useAuthModal } from './AuthModalContext';
-import { supabase } from './supabaseClient';
+import { useAuth } from './hooks/UseAuth';
 import { Preloader } from './features/preloader';
 import { usePreloader } from './features/PreloaderContext';
 import { PageTransitionLoader } from './features/PageTransitionLoader';
@@ -30,8 +30,8 @@ export default function App() {
   const { isLoginModalOpen, setIsLoginModalOpen } = useAuthModal();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { user, logout } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const { scrollY } = useScroll();
   const { setIsCartOpen, items } = useCart();
   const { isLoading, hasCompletedOnce } = usePreloader();
@@ -59,40 +59,6 @@ export default function App() {
   useEffect(() => {
     isTransitioningRef.current = isTransitioning;
   }, [isTransitioning]);
-
-  useEffect(() => {
-    const checkAdminStatus = async (u: any) => {
-      if (u && u.email) {
-        if (u.email === 'officialzevrae@gmail.com') {
-          setIsAdmin(true);
-          return;
-        }
-
-        try {
-          const { data } = await supabase.from('admin_users').select('*').eq('email', u.email);
-          setIsAdmin(data && data.length > 0);
-        } catch (e) {
-          setIsAdmin(false);
-        }
-      } else {
-        setIsAdmin(false);
-      }
-    };
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const u = session?.user || null;
-      setUser(u);
-      checkAdminStatus(u);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      const u = session?.user || null;
-      setUser(u);
-      checkAdminStatus(u);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -189,10 +155,8 @@ export default function App() {
 
   const getDisplayName = () => {
     if (!user) return null;
-    const fullName = user.user_metadata?.full_name;
-    if (fullName) return fullName.split(' ')[0].toUpperCase();
-    const email = user.email;
-    if (email) return email.split('@')[0].toUpperCase();
+    if (user.name) return user.name.split(' ')[0].toUpperCase();
+    if (user.email) return user.email.split('@')[0].toUpperCase();
     return 'USER';
   };
   
@@ -255,7 +219,7 @@ return (
               </button>
             )}
             {user ? (
-              <button onClick={() => supabase.auth.signOut()} className="group relative overflow-hidden pb-1 hover:text-[#EAE6E1] transition-colors duration-700">
+              <button onClick={() => logout()} className="group relative overflow-hidden pb-1 hover:text-[#EAE6E1] transition-colors duration-700">
                 {displayName} | LOGOUT
                 <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C5A059]/40 transform origin-left scale-x-0 transition-transform duration-700 ease-out group-hover:scale-x-100" />
               </button>
@@ -322,7 +286,7 @@ return (
                 ? [{ name: 'Admin Panel', href: '#', onClick: () => { navTransition(() => navigate('/admin')); setIsMenuOpen(false); } }]
                 : []),
               user 
-                ? { name: `${displayName} | Logout`, href: '#', onClick: () => { supabase.auth.signOut(); setIsMenuOpen(false); } }
+                ? { name: `${displayName} | Logout`, href: '#', onClick: () => { logout(); setIsMenuOpen(false); } }
                 : { name: 'Login', href: '#', onClick: () => { navTransition(() => setIsLoginModalOpen(true)); setIsMenuOpen(false); } },
               { name: `Cart (${items.length})`, href: '#', onClick: () => { navTransition(() => navigate('/bag')); setIsMenuOpen(false); } }
             ].map((item, i) => (

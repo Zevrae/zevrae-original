@@ -3,17 +3,17 @@ import { X, ShoppingBag } from 'lucide-react';
 import { useCart } from './CartContext';
 import { useAuthModal } from './AuthModalContext';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
+import { useAuth } from './hooks/UseAuth';
 
 export default function CartDrawer() {
   const { items, removeFromCart, isCartOpen, setIsCartOpen, cartTotal } = useCart();
   const { setIsLoginModalOpen } = useAuthModal();
+  const { token } = useAuth();
   const navigate = useNavigate();
 
-  const handleCheckoutClick = async () => {
+  const handleCheckoutClick = () => {
     setIsCartOpen(false);
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!token) {
       setIsLoginModalOpen(true);
     } else {
       navigate('/checkout');

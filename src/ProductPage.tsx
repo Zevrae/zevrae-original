@@ -4,7 +4,8 @@ import { ChevronLeft, Minus, Plus, ShoppingBag, ArrowRight } from 'lucide-react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useCart } from './CartContext';
 import { useAuthModal } from './AuthModalContext';
-import { supabase } from './supabaseClient';
+import { useAuth } from './hooks/UseAuth';
+import { productsApi } from './api/products';
 
 type ProductDetail = {
   id: string;
@@ -103,6 +104,7 @@ export default function ProductPage() {
   const location = useLocation();
   const { addToCart } = useCart();
   const { setIsLoginModalOpen } = useAuthModal();
+  const { token } = useAuth();
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
@@ -138,13 +140,10 @@ export default function ProductPage() {
     if (!product) return;
     const fetchRelated = async () => {
       try {
-        const res = await fetch('/api/products');
-        if (!res.ok) return;
-        const data = await res.json();
+        const { data } = await productsApi.list({ status: 'active', limit: 100 });
         const related = (data || [])
           .filter(
             (p: any) =>
-              p.status === 'active' &&
               p.id !== product.id &&
               (p.category?.toLowerCase() === product.category ||
                 p.subcategory?.toLowerCase() === product.type)
@@ -192,12 +191,9 @@ export default function ProductPage() {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const handleBuyNow = async () => {
+  const handleBuyNow = () => {
     if (!product || !selectedSize) return;
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
+    if (!token) {
       setIsLoginModalOpen(true);
       return;
     }

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './hooks/UseAuth';
 import {
   Package2, ChevronDown, Eye, CheckCircle2, Truck, XCircle,
   DollarSign, Archive, Clock, Smartphone, LayoutDashboard,
@@ -8,24 +10,10 @@ import {
   FolderOpen, Star, AlertCircle, TrendingUp, Users, ArrowUpRight,
   Save, Upload, RefreshCw
 } from 'lucide-react';
-import { supabase } from './supabaseClient';
+import { productsApi } from './api/products';
+import { ordersApi, Order } from './api/orders';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
-
-interface Order {
-  id: number;
-  order_id: string;
-  customer_name: string;
-  customer_email: string;
-  customer_address: string;
-  customer_phone?: string;
-  amount: number;
-  products: string;
-  payment_method: string;
-  status: string;
-  order_status?: string;
-  created_at: string;
-}
 
 type AdminSection = 'dashboard' | 'orders' | 'products' | 'collections' | 'categories' | 'discounts';
 
@@ -99,7 +87,7 @@ function SectionHeader({ title, action, onAction }: { title: string; action?: st
   );
 }
 
-function Badge({ label, variant }: { label: string; variant: 'active' | 'draft' | 'expired' | 'pending' | 'paid' | 'cod' }) {
+function Badge({ label, variant }: { label: string; variant: 'active' | 'draft' | 'expired' | 'pending' | 'paid' | 'cod' | 'placed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'failed' | 'refunded' | 'online' }) {
   const styles = {
     active: 'bg-emerald-900/25 text-emerald-400 border-emerald-900/40',
     draft: 'bg-[#1a1a1a] text-[#EAE6E1]/40 border-[#EAE6E1]/10',
@@ -107,6 +95,14 @@ function Badge({ label, variant }: { label: string; variant: 'active' | 'draft' 
     pending: 'bg-amber-900/20 text-amber-400 border-amber-900/30',
     paid: 'bg-emerald-900/25 text-emerald-400 border-emerald-900/40',
     cod: 'bg-blue-900/20 text-blue-400 border-blue-900/30',
+    online: 'bg-purple-900/20 text-purple-400 border-purple-900/30',
+    placed: 'bg-amber-900/20 text-amber-400 border-amber-900/30',
+    processing: 'bg-blue-900/20 text-blue-400 border-blue-900/30',
+    shipped: 'bg-purple-900/20 text-purple-400 border-purple-900/30',
+    delivered: 'bg-emerald-900/25 text-emerald-400 border-emerald-900/40',
+    cancelled: 'bg-red-900/20 text-red-400 border-red-900/30',
+    failed: 'bg-red-900/20 text-red-400 border-red-900/30',
+    refunded: 'bg-[#1a1a1a] text-[#EAE6E1]/40 border-[#EAE6E1]/10',
   };
   return (
     <span className={`px-2 py-0.5 text-[9px] uppercase tracking-wider font-sans rounded-sm border ${styles[variant]}`}>
@@ -162,8 +158,8 @@ const selectCls = `${inputCls} cursor-pointer`;
 
 function DashboardSection({ orders }: { orders: Order[] }) {
   const totalOrders = orders.length;
-  const pendingOrders = orders.filter(o => o.order_status === 'pending' || !o.order_status).length;
-  const revenue = orders.filter(o => o.status?.toLowerCase() === 'paid').reduce((s, o) => s + o.amount, 0);
+  const pendingOrders = orders.filter(o => o.order_status === 'placed').length;
+  const revenue = orders.filter(o => o.payment_status === 'paid').reduce((s, o) => s + o.total, 0);
 
   const recentOrders = orders.slice(0, 5);
 
@@ -188,18 +184,21 @@ function DashboardSection({ orders }: { orders: Order[] }) {
             <p className="p-6 text-[11px] text-[#EAE6E1]/30 font-sans text-center">No orders yet.</p>
           ) : (
             <div className="divide-y divide-[#EAE6E1]/5">
-              {recentOrders.map(o => (
-                <div key={o.order_id} className="px-5 py-3 flex items-center justify-between">
-                  <div>
-                    <p className="text-[11px] text-[#EAE6E1] font-mono">{o.customer_name}</p>
-                    <p className="text-[9px] text-[#EAE6E1]/40 font-sans mt-0.5">{o.order_id.split('_').pop()}</p>
+              {recentOrders.map(o => {
+                const customer = typeof o.user === 'object' ? o.user : null;
+                return (
+                  <div key={o.id} className="px-5 py-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-[11px] text-[#EAE6E1] font-mono">{customer?.name || 'Customer'}</p>
+                      <p className="text-[9px] text-[#EAE6E1]/40 font-sans mt-0.5">{o.id.slice(-8)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[11px] font-mono text-[#C5A059]">{formatVal(o.total)}</p>
+                      <Badge label={o.order_status} variant={o.order_status as any} />
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[11px] font-mono text-[#C5A059]">{formatVal(o.amount)}</p>
-                    <Badge label={o.order_status || 'pending'} variant={(o.order_status as any) || 'pending'} />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -240,23 +239,24 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
   orders: Order[];
   loading: boolean;
   errorMsg: string;
-  onUpdateStatus: (id: number, status: string) => void;
+  onUpdateStatus: (id: string, status: string) => void;
 }) {
   const [filter, setFilter] = useState('All');
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
   const filtered = orders.filter(o => {
+    const customer = typeof o.user === 'object' ? o.user : null;
     const matchFilter =
       filter === 'All' ? true :
-      filter === 'Pending' ? (o.order_status === 'pending' || !o.order_status) :
-      filter === 'Paid' ? o.status?.toLowerCase() === 'paid' :
-      filter === 'COD' ? o.payment_method?.toLowerCase() === 'cod' :
+      filter === 'Pending' ? o.order_status === 'placed' :
+      filter === 'Paid' ? o.payment_status === 'paid' :
+      filter === 'COD' ? o.payment_method === 'cod' :
       filter === 'Delivered' ? o.order_status === 'delivered' : true;
     const matchSearch = !search ||
-      o.customer_name.toLowerCase().includes(search.toLowerCase()) ||
-      o.order_id.toLowerCase().includes(search.toLowerCase()) ||
-      o.customer_email.toLowerCase().includes(search.toLowerCase());
+      (customer?.name || '').toLowerCase().includes(search.toLowerCase()) ||
+      o.id.toLowerCase().includes(search.toLowerCase()) ||
+      (customer?.email || '').toLowerCase().includes(search.toLowerCase());
     return matchFilter && matchSearch;
   });
 
@@ -264,7 +264,7 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
     switch (s) {
       case 'delivered': return 'text-emerald-400 bg-emerald-900/20';
       case 'shipped': return 'text-blue-400 bg-blue-900/20';
-      case 'packed': return 'text-purple-400 bg-purple-900/20';
+      case 'processing': return 'text-purple-400 bg-purple-900/20';
       case 'cancelled': return 'text-red-400 bg-red-900/20';
       default: return 'text-[#C5A059] bg-[#C5A059]/10';
     }
@@ -336,37 +336,39 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                   </td>
                 </tr>
               ) : (
-                filtered.map(order => (
-                  <React.Fragment key={order.order_id}>
+                filtered.map(order => {
+                  const customer = typeof order.user === 'object' ? order.user : null;
+                  return (
+                  <React.Fragment key={order.id}>
                     <tr className="border-b border-[#EAE6E1]/5 hover:bg-[#12100C]/40 transition-colors">
                       <td className="p-4 text-[11px] font-mono text-[#EAE6E1]">
-                        #{order.order_id.split('_').pop() || order.order_id}
+                        #{order.id.slice(-8)}
                       </td>
                       <td className="p-4">
-                        <p className="text-[11px] text-[#EAE6E1]">{order.customer_name}</p>
-                        <p className="text-[9px] text-[#EAE6E1]/40 font-mono mt-0.5">{order.customer_email}</p>
-                        {order.customer_phone && (
+                        <p className="text-[11px] text-[#EAE6E1]">{customer?.name || 'Customer'}</p>
+                        <p className="text-[9px] text-[#EAE6E1]/40 font-mono mt-0.5">{customer?.email}</p>
+                        {customer?.phone && (
                           <p className="text-[9px] text-[#EAE6E1]/40 font-mono mt-0.5 flex items-center gap-1">
-                            <Smartphone size={9} /> {order.customer_phone}
+                            <Smartphone size={9} /> {customer.phone}
                           </p>
                         )}
                       </td>
                       <td className="p-4 text-[10px] text-[#EAE6E1]/50 font-sans">{formatDate(order.created_at)}</td>
-                      <td className="p-4 text-[11px] font-mono text-[#EAE6E1]">{formatVal(order.amount)}</td>
+                      <td className="p-4 text-[11px] font-mono text-[#EAE6E1]">{formatVal(order.total)}</td>
                       <td className="p-4">
                         <div className="flex flex-col gap-1">
-                          <Badge label={order.payment_method} variant={order.payment_method?.toLowerCase() === 'cod' ? 'cod' : 'paid'} />
-                          <Badge label={order.status} variant={order.status === 'paid' ? 'paid' : 'pending'} />
+                          <Badge label={order.payment_method === 'cod' ? 'COD' : 'Online'} variant={order.payment_method === 'cod' ? 'cod' : 'online'} />
+                          <Badge label={order.payment_status} variant={order.payment_status === 'paid' ? 'paid' : 'pending'} />
                         </div>
                       </td>
                       <td className="p-4">
                         <span className={`px-2 py-0.5 text-[9px] uppercase tracking-wider font-sans rounded-sm ${orderStatusColor(order.order_status)}`}>
-                          {order.order_status || 'pending'}
+                          {order.order_status}
                         </span>
                       </td>
                       <td className="p-4 text-right">
                         <button
-                          onClick={() => setExpandedOrder(expandedOrder === order.order_id ? null : order.order_id)}
+                          onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                           className="text-[9px] uppercase tracking-[0.1em] font-sans hover:text-[#C5A059] transition-colors border border-[#EAE6E1]/15 px-3 py-1.5 rounded-sm flex items-center gap-1.5 ml-auto"
                         >
                           <Eye size={11} /> View
@@ -374,7 +376,7 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                       </td>
                     </tr>
                     <AnimatePresence>
-                      {expandedOrder === order.order_id && (
+                      {expandedOrder === order.id && (
                         <motion.tr
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -386,14 +388,18 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                               <div>
                                 <p className="text-[10px] uppercase tracking-[0.2em] font-sans text-[#C5A059] mb-3">Customer Details</p>
                                 <div className="space-y-1.5 text-[11px] text-[#EAE6E1]/70 bg-[#111] p-4 rounded-sm border border-[#EAE6E1]/5">
-                                  <p><span className="text-[#EAE6E1]/40 w-14 inline-block">Name:</span> {order.customer_name}</p>
-                                  <p><span className="text-[#EAE6E1]/40 w-14 inline-block">Email:</span> {order.customer_email}</p>
-                                  {order.customer_phone && <p><span className="text-[#EAE6E1]/40 w-14 inline-block">Phone:</span> {order.customer_phone}</p>}
-                                  <p><span className="text-[#EAE6E1]/40 w-14 inline-block">Address:</span> {order.customer_address}</p>
+                                  <p><span className="text-[#EAE6E1]/40 w-14 inline-block">Name:</span> {customer?.name || '—'}</p>
+                                  <p><span className="text-[#EAE6E1]/40 w-14 inline-block">Email:</span> {customer?.email || '—'}</p>
+                                  {customer?.phone && <p><span className="text-[#EAE6E1]/40 w-14 inline-block">Phone:</span> {customer.phone}</p>}
+                                  <p>
+                                    <span className="text-[#EAE6E1]/40 w-14 inline-block">Address:</span>{' '}
+                                    {[order.shipping_address.line1, order.shipping_address.line2, order.shipping_address.city, order.shipping_address.state, order.shipping_address.postal_code, order.shipping_address.country]
+                                      .filter(Boolean).join(', ')}
+                                  </p>
                                 </div>
                                 <p className="text-[10px] uppercase tracking-[0.2em] font-sans text-[#C5A059] mb-3 mt-5">Update Status</p>
                                 <div className="flex flex-wrap gap-2">
-                                  {['packed', 'shipped', 'delivered', 'cancelled'].map(s => (
+                                  {['processing', 'shipped', 'delivered', 'cancelled'].map(s => (
                                     <button
                                       key={s}
                                       onClick={() => onUpdateStatus(order.id, s)}
@@ -407,26 +413,15 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                               <div>
                                 <p className="text-[10px] uppercase tracking-[0.2em] font-sans text-[#C5A059] mb-3">Products Ordered</p>
                                 <div className="space-y-2">
-                                  {(() => {
-                                    let products: any[] = [];
-                                    try { products = JSON.parse(order.products); } catch {}
-                                    return products.map((item, idx) => (
-                                      <div key={idx} className="flex justify-between items-center bg-[#111] p-3 border border-[#EAE6E1]/5 rounded-sm">
-                                        <div className="flex items-center gap-3">
-                                          {item.image && (
-                                            <div className="w-9 h-9 bg-[#12100C] rounded-sm overflow-hidden flex-shrink-0 border border-[#EAE6E1]/10">
-                                              <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80" />
-                                            </div>
-                                          )}
-                                          <div>
-                                            <p className="text-[10px] font-sans uppercase tracking-[0.1em] text-[#EAE6E1]">{item.name}</p>
-                                            <p className="text-[9px] font-mono text-[#EAE6E1]/40 mt-0.5">Size: {item.size} × {item.quantity}</p>
-                                          </div>
-                                        </div>
-                                        <span className="text-[11px] font-mono text-[#C5A059]">{formatVal(item.price * item.quantity)}</span>
+                                  {order.items.map((item, idx) => (
+                                    <div key={idx} className="flex justify-between items-center bg-[#111] p-3 border border-[#EAE6E1]/5 rounded-sm">
+                                      <div>
+                                        <p className="text-[10px] font-sans uppercase tracking-[0.1em] text-[#EAE6E1]">{item.name}</p>
+                                        <p className="text-[9px] font-mono text-[#EAE6E1]/40 mt-0.5">Size: {item.size || '—'} × {item.quantity}</p>
                                       </div>
-                                    ));
-                                  })()}
+                                      <span className="text-[11px] font-mono text-[#C5A059]">{formatVal(item.price * item.quantity)}</span>
+                                    </div>
+                                  ))}
                                 </div>
                               </div>
                             </div>
@@ -435,7 +430,8 @@ function OrdersSection({ orders, loading, errorMsg, onUpdateStatus }: {
                       )}
                     </AnimatePresence>
                   </React.Fragment>
-                ))
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -498,9 +494,7 @@ function ProductsSection() {
     setDbLoading(true);
     setDbError('');
     try {
-      const res = await fetch('/api/products');
-      if (!res.ok) throw new Error('Failed to fetch products');
-      const data = await res.json();
+      const { data } = await productsApi.list({ limit: 100 });
       setDbProducts((data as DbProduct[]) || []);
     } catch (err: any) {
       setDbError('Could not load products. Make sure the database is connected.');
@@ -549,49 +543,28 @@ function ProductsSection() {
   const handleSave = async () => {
     if (!form.name.trim()) return;
     setSaving(true);
-    
-    try {
-      let uploadedUrls: string[] = [];
-      
-      // Upload images if there are any
-      if (imageFiles.length > 0) {
-        const formData = new FormData();
-        imageFiles.forEach(file => {
-          formData.append('images', file);
-        });
-        
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData
-        });
-        if (!uploadRes.ok) throw new Error('Failed to upload images');
-        const uploadData = await uploadRes.json();
-        uploadedUrls = uploadData.urls || [];
-      }
-      
-      // Combine existing kept images with newly uploaded URLs
-      const finalImages = [...form.images, ...uploadedUrls];
-      const payload = { ...form, images: finalImages };
 
+    try {
+      const payload = { ...form, images: form.images };
+
+      let productId = editingId;
       if (editingId) {
-        const res = await fetch(`/api/products/${editingId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!res.ok) throw new Error('Update failed');
+        await productsApi.update(editingId, payload);
       } else {
-        const res = await fetch('/api/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!res.ok) throw new Error('Create failed');
+        const created = await productsApi.create(payload);
+        productId = created.id;
       }
+
+      // Newly selected files go to Appwrite via the product-scoped upload
+      // endpoint, which appends them to the product's existing images array.
+      if (imageFiles.length > 0 && productId) {
+        await productsApi.uploadImages(productId, imageFiles);
+      }
+
       setShowModal(false);
       fetchDbProducts();
     } catch (err: any) {
-      alert('Save failed: ' + err.message);
+      alert('Save failed: ' + (err?.response?.data?.message || err.message));
     } finally {
       setSaving(false);
     }
@@ -601,11 +574,10 @@ function ProductsSection() {
   const handleDelete = async (id: string) => {
     if (!confirm('Permanently delete this product? This will remove it from the storefront immediately.')) return;
     try {
-      const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Delete failed');
+      await productsApi.remove(id);
       fetchDbProducts();
     } catch (error: any) {
-      alert('Delete failed: ' + error.message);
+      alert('Delete failed: ' + (error?.response?.data?.message || error.message));
     }
   };
 
@@ -1379,50 +1351,54 @@ function Sidebar({ active, setActive, isMobileOpen, onClose }: {
 // ─── Main Admin Component ─────────────────────────────────────────────────────
 
 export default function Admin() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    // Skip auth check — frontend-only admin panel
-    setIsAdmin(true);
-    fetchOrders();
-  }, []);
+  const isAdmin = authLoading ? null : user?.role === 'admin';
 
   useEffect(() => {
+    if (authLoading) return;
+    if (!isAdmin) {
+      navigate('/');
+      return;
+    }
+    fetchOrders();
+  }, [authLoading, isAdmin]);
+
+  // Real-time order updates aren't wired up on the backend (no websocket/SSE
+  // endpoint), so we poll instead — same effective behavior as before.
+  useEffect(() => {
     if (!isAdmin) return;
-    const channel = supabase
-      .channel('public:orders')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => fetchOrders())
-      .subscribe();
-    const poll = setInterval(() => fetchOrders(false), 3000);
-    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+    const poll = setInterval(() => fetchOrders(false), 5000);
+    return () => clearInterval(poll);
   }, [isAdmin]);
 
   const fetchOrders = async (showLoader = true) => {
     if (showLoader) setLoading(true);
     try {
-      const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
-      if (error) {
-        if (orders.length === 0) setErrorMsg('Could not load orders. Please configure your orders table.');
-        return;
-      }
-      setOrders((data as Order[]).map(o => ({ ...o, order_status: o.order_status || 'pending' })));
+      const { data } = await ordersApi.list({ limit: 100 });
+      setOrders(data);
       setErrorMsg('');
     } catch (err: any) {
+      if (orders.length === 0) setErrorMsg('Could not load orders. Make sure the backend is reachable.');
       console.error('Orders fetch error:', err);
     } finally {
       if (showLoader) setLoading(false);
     }
   };
 
-  const updateOrderStatus = async (id: number, status: string) => {
-    const { error } = await supabase.from('orders').update({ order_status: status }).eq('id', id);
-    if (error) { alert('Status update failed: ' + error.message); return; }
-    fetchOrders(true);
+  const updateOrderStatus = async (id: string, status: string) => {
+    try {
+      await ordersApi.updateStatus(id, { order_status: status });
+      fetchOrders(true);
+    } catch (err: any) {
+      alert('Status update failed: ' + (err?.response?.data?.message || err.message));
+    }
   };
 
   if (isAdmin === null) {
@@ -1435,6 +1411,8 @@ export default function Admin() {
       </div>
     );
   }
+
+  if (!isAdmin) return null;
 
   return (
     <div className="min-h-screen bg-[#12100C] text-[#EAE6E1] font-sans">

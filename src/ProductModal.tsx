@@ -4,7 +4,7 @@ import { X, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useCart } from './CartContext';
 import { useAuthModal } from './AuthModalContext';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
+import { useAuth } from './hooks/UseAuth';
 
 interface Product {
   id: string;
@@ -34,6 +34,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   const [activeImage, setActiveImage] = useState<'front' | 'back' | 'top'>('front');
   const { addToCart } = useCart();
   const { setIsLoginModalOpen } = useAuthModal();
+  const { token } = useAuth();
   const navigate = useNavigate();
 
   // Reset state when modal opens with new product
@@ -60,11 +61,10 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
     setActiveImage('front');
   };
 
-  const handleBuyNow = async () => {
+  const handleBuyNow = () => {
     if (!selectedSize) return;
 
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!token) {
       onClose();
       setIsLoginModalOpen(true);
       return;

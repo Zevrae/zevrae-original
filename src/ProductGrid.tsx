@@ -5,6 +5,7 @@ import ProductCardSober from './components/ProductCardSober';
 import PinterestCard from './components/PinterestCard';
 import './components/PinterestCard.css';
 import ComingSoon from './pages/comingsoon/ComingSoon';
+import { productsApi } from './api/products';
 const products = [];
 const mensCategories = [
   {
@@ -620,11 +621,9 @@ export default function ProductGrid({ categoryFilter = 'all' }: { categoryFilter
   useEffect(() => {
     const fetchDbProducts = async () => {
       try {
-        const res = await fetch('/api/products');
-        if (!res.ok) throw new Error('Failed to fetch products');
-        const data = await res.json();
-        
-        const formatted = (data || []).filter((p: any) => p.status === 'active').map((p: any) => {
+        const { data } = await productsApi.list({ status: 'active', limit: 100 });
+
+        const formatted = (data || []).map((p: any) => {
           const isJewellery = p.category?.toLowerCase() === 'jewellery';
           return {
             id: p.id,
