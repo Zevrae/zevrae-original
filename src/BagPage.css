@@ -12,35 +12,48 @@
   padding-top: clamp(7rem, 12vh, 10rem);
   padding-bottom: clamp(4rem, 10vh, 8rem);
   will-change: opacity, transform;
+  box-sizing: border-box;
 }
 
 /* ── Hero heading ── */
 .bag-header {
   margin-bottom: 0;
+  /* Break out of page's side padding so heading can center across full viewport */
+  margin-left: calc(-1 * clamp(1.5rem, 5vw, 5rem));
+  margin-right: calc(-1 * clamp(1.5rem, 5vw, 5rem));
+  padding-left: clamp(1.5rem, 5vw, 5rem);
+  padding-right: clamp(1.5rem, 5vw, 5rem);
+  overflow: hidden;
 }
 
 .bag-heading {
-  font-family: 'Neue Haas Grotesk Text Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  font-size: clamp(3.5rem, 11.5vw, 14rem);
-  line-height: 1;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: clamp(4rem, 12.5vw, 16rem);
+  line-height: 0.85;
   letter-spacing: -0.02em;
   color: #F2ECE6;
   text-transform: uppercase;
+  text-align: center;
   margin: 0 0 clamp(1rem, 2vw, 1.8rem) 0;
-  padding: 0;
-  display: flex;
+  padding: 0.4em 0;
   white-space: nowrap;
-  overflow: hidden;
+}
+
+/* The space between YOUR and BAG — a fixed-width gap */
+.bag-heading-space {
+  display: inline-block;
+  width: 0.25em;
 }
 
 /* Outer clip — overflow:hidden hides letter until GSAP slides it up */
 .bag-heading-clip {
   display: inline-block;
   overflow: hidden;
-  /* Extra bottom padding so descenders / caps don't get shaved */
-  padding-bottom: 0.12em;
   line-height: 1;
+  /* Generous vertical padding so tall Archivo caps don't get shaved */
+  padding-bottom: 0.18em;
   vertical-align: top;
 }
 
@@ -68,8 +81,10 @@
   font-family: 'Archivo', sans-serif;
   font-weight: 800;
   font-stretch: 125%;
-  /* Scale down until it fits on one line */
-  font-size: clamp(1.4rem, 4.5vw, 5rem);
+  /* This is just the pre-JS fallback — BagPage.tsx measures the rendered
+     width and overrides font-size via inline style to actually fill the
+     line, since the right size depends on the exact sentence length. */
+  font-size: clamp(1.4rem, 8vw, 9rem);
   color: #F2ECE6;
   line-height: 1;
   margin: 0 0 0.3em 0;
@@ -81,7 +96,7 @@
   font-family: 'Archivo', sans-serif;
   font-weight: 800;
   font-stretch: 125%;
-  font-size: clamp(1.2rem, 4vw, 4.5rem);
+  font-size: clamp(1.2rem, 7vw, 8rem);
   color: rgba(242, 236, 230, 0.35);
   line-height: 1;
   margin: 0 0 clamp(2rem, 5vw, 4rem) 0;
@@ -106,6 +121,32 @@
   color: #F2ECE6;
 }
 
+/* ── Text reveal masks (item text, subtotal, checkout) ── */
+.mask-reveal {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.mask-reveal-block {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.mask-reveal-inner {
+  display: inline-block;
+  will-change: transform;
+  transform: translateY(110%);
+}
+
+.mask-reveal-block .mask-reveal-inner {
+  display: block;
+}
+
 /* ── Item list ── */
 .bag-items {
   list-style: none;
@@ -123,6 +164,9 @@
   align-items: center;
   gap: 0 clamp(2rem, 4vw, 5rem);
   padding: clamp(2rem, 4vw, 3.5rem) 0;
+  opacity: 0;
+  transform: translateY(28px);
+  will-change: opacity, transform;
 }
 
 .bag-item-info {
