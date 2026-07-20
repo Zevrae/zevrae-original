@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './index.css';
 import { CartProvider } from './CartContext.tsx';
 import { AuthModalProvider } from './AuthModalContext.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
 import { PreloaderProvider } from './features/PreloaderContext.tsx';
 import { PageTransitionProvider } from './features/PageTransitionContext.tsx';
 
@@ -14,9 +15,11 @@ createRoot(document.getElementById('root')!).render(
       <PreloaderProvider>
         <PageTransitionProvider>
           <CartProvider>
-            <AuthModalProvider>
-              <App />
-            </AuthModalProvider>
+            <AuthProvider>
+              <AuthModalProvider>
+                <App />
+              </AuthModalProvider>
+            </AuthProvider>
           </CartProvider>
         </PageTransitionProvider>
       </PreloaderProvider>
