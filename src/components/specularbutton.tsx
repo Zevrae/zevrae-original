@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { Renderer, Program, Mesh, Triangle, Color } from 'ogl';
-import './SpecularButton.css';
+import './specularbutton.css';
 
 const PAD = 20;
 
