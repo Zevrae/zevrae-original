@@ -17,7 +17,31 @@ import { ordersApi, Order } from './api/orders';
 
 type AdminSection = 'dashboard' | 'orders' | 'products' | 'collections' | 'categories' | 'discounts';
 
+// ─── Mock / Seed Data ─────────────────────────────────────────────────────────
 
+const mockProducts = [
+  { id: 'mp1', name: 'Oversized Graphic Tee', category: 'Men', image: '', price: 799, stock: 42, status: 'active' },
+  { id: 'mp2', name: 'Relaxed Linen Shirt', category: 'Men', image: '', price: 1299, stock: 18, status: 'active' },
+  { id: 'mp3', name: 'Drop-Shoulder Hoodie', category: 'Men', image: '', price: 1799, stock: 9, status: 'draft' },
+];
+
+const mockCollections = [
+  { id: 'col1', name: 'Summer Drop 2026', slug: 'summer-2026', status: 'active', featured: true, products: 8 },
+  { id: 'col2', name: 'Autumn / Winter Edit', slug: 'aw26', status: 'draft', featured: false, products: 3 },
+  { id: 'col3', name: 'Essentials', slug: 'essentials', status: 'active', featured: false, products: 12 },
+];
+
+const mockCategories = [
+  { id: 'cat1', name: 'Men', slug: 'men', subcategories: ['T-Shirts', 'Lowers', 'Outerwear', 'Accessories'], products: 24, status: 'active' },
+  { id: 'cat2', name: 'Women', slug: 'women', subcategories: ['Tops', 'Bottoms', 'Dresses', 'Accessories'], products: 18, status: 'active' },
+  { id: 'cat3', name: 'Unisex', slug: 'unisex', subcategories: ['Hoodies', 'Tees', 'Caps'], products: 6, status: 'active' },
+];
+
+const mockDiscounts = [
+  { id: 'd1', code: 'ZEVRAE10', type: 'Percentage', value: 10, limit: 500, uses: 34, expiry: '2026-12-31', status: 'active' },
+  { id: 'd2', code: 'FLAT200', type: 'Fixed Amount', value: 200, limit: 100, uses: 100, expiry: '2026-06-30', status: 'expired' },
+  { id: 'd3', code: 'WELCOME15', type: 'Percentage', value: 15, limit: 1000, uses: 12, expiry: '2026-12-31', status: 'active' },
+];
 
 const formatVal = (val: number) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
